@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
 import { Text, TextInput, View, Button, ActivityIndicator, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Dimensions } from 'react-native';
 
 const ProfileScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
@@ -8,19 +9,23 @@ const ProfileScreen = ({ navigation }) => {
     const [lastName, setLastName] = useState('');
     const [friendCount, setFriendCount] = useState('');
     const [email, setEmail] = useState('');
-    var token;
-    var id;
+    const [token, setToken] = useState('');
+    const [id, setId] = useState(null);
+    const [photo, setPhoto] = useState();
 
     useEffect(async () => {
-        token = await AsyncStorage.getItem('token')
-        id = await AsyncStorage.getItem('id')
-        if (loading) {
-            getProfile(token, id)
+        setToken(await AsyncStorage.getItem('token'))
+        setId(await AsyncStorage.getItem('id'))
+
+        if(loading) {
+            getProfile()
+            getProfilePic()
             setLoading(false)
         }
+
     })
 
-    const getProfile = (token, id) => {
+    const getProfile = async () => {
         return fetch("http://localhost:3333/api/1.0.0/user/" + id, {
             method: "GET",
             headers: {
@@ -38,6 +43,25 @@ const ProfileScreen = ({ navigation }) => {
             .catch((error) => {
                 console.log(error);
             })
+    }
+
+    const getProfilePic = () => {
+        fetch("http://localhost:3333/api/1.0.0/user/" + id + "/photo", {
+            method: 'GET',
+            headers: {
+                'X-Authorization': token
+            }
+        })
+            .then((res) => {
+                return res.blob();
+            })
+            .then((resBlob) => {
+                let data = URL.createObjectURL(resBlob);
+                setPhoto(data)
+            })
+            .catch((err) => {
+                console.log("error", err)
+            });
     }
 
     const handleLogout = () => {
@@ -64,6 +88,10 @@ const ProfileScreen = ({ navigation }) => {
             })
     }
 
+    const takePhoto = async () => {
+        navigation.navigate('Camera')
+    }
+
     if (loading) {
         return (
             <View>
@@ -75,16 +103,19 @@ const ProfileScreen = ({ navigation }) => {
         );
     } else {
         return (
-            <View style={{ padding: 10 }}>
+            <View style={{ padding: 5 }}>
                 <Image
                     source={{
-                        uri: 'http://localhost:3333/api/1.0.0/user/'+id+'/photo',
-                        method: 'GET',
-                        headers: {
-                            'X-authorization': token
-                        }
+                        uri: photo,
                     }}
-                    style={{ width: 400, height: 400 }}
+                    style={{
+                        width: (Dimensions.get('window').width) - 10,
+                        height: (Dimensions.get('window').width) - 10
+                    }}
+                />
+                <Button
+                    title="Take a picture"
+                    onPress={() => takePhoto()}
                 />
                 <Text>{firstName} {lastName}</Text>
                 <Text>Email: {email}</Text>
