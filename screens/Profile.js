@@ -3,53 +3,64 @@ import { Text, TextInput, View, Button, ActivityIndicator, Image } from 'react-n
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dimensions } from 'react-native';
 
-const ProfileScreen = ({ navigation }) => {
-    const [loading, setLoading] = useState(true);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [friendCount, setFriendCount] = useState('');
-    const [email, setEmail] = useState('');
-    const [token, setToken] = useState('');
-    const [id, setId] = useState(null);
-    const [photo, setPhoto] = useState();
-
-    useEffect(async () => {
-        setToken(await AsyncStorage.getItem('token'))
-        setId(await AsyncStorage.getItem('id'))
-
-        if(loading) {
-            getProfile()
-            getProfilePic()
-            setLoading(false)
+class ProfileScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            token: "",
+            id: 0,
+            firstName: "",
+            lastName: "",
+            email: "",
+            friendCount: "",
+            photo: null,
+            loading: true
         }
+    }
 
-    })
+    async componentDidMount() {
+        this.setState({
+            token: await AsyncStorage.getItem('token'),
+            id: await AsyncStorage.getItem('id'),
+            loading: true
+        });
+        this.getProfile()
+        this.getProfilePic()
+        this.setState({ loading: false })
 
-    const getProfile = async () => {
-        return fetch("http://localhost:3333/api/1.0.0/user/" + id, {
+        this.focusListener = this.props.navigation.addListener('focus', () => {
+            this.getProfile()
+            this.getProfilePic()
+          });
+    }
+
+    getProfile = async () => {
+        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.id, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                'X-authorization': token
+                'X-authorization': this.state.token
             }
         })
             .then((response) => response.json())
             .then((response) => {
-                setEmail(response.email);
-                setFirstName(response.first_name);
-                setLastName(response.last_name);
-                setFriendCount(response.friend_count);
+                this.setState({
+                    email: response.email,
+                    firstName: response.first_name,
+                    lastName: response.last_name,
+                    friendCount: response.friend_count,
+                });
             })
             .catch((error) => {
                 console.log(error);
             })
     }
 
-    const getProfilePic = () => {
-        fetch("http://localhost:3333/api/1.0.0/user/" + id + "/photo", {
+    getProfilePic = () => {
+        fetch("http://localhost:3333/api/1.0.0/user/" + this.state.id + "/photo", {
             method: 'GET',
             headers: {
-                'X-Authorization': token
+                'X-Authorization': this.state.token
             }
         })
             .then((res) => {
@@ -57,75 +68,78 @@ const ProfileScreen = ({ navigation }) => {
             })
             .then((resBlob) => {
                 let data = URL.createObjectURL(resBlob);
-                setPhoto(data)
+                this.setState({ photo: data });
+                //setPhoto(data)
             })
             .catch((err) => {
                 console.log("error", err)
             });
     }
 
-    const handleLogout = () => {
-        logout();
-        navigation.popToTop();
+    handleLogout = () => {
+        this.logout();
+        this.props.navigation.popToTop();
     }
 
-    const logout = () => {
+    logout = () => {
         return fetch("http://localhost:3333/api/1.0.0/logout", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'X-authorization': token
+                'X-authorization': this.state.token
             }
         })
             .then(async () => {
                 await AsyncStorage.setItem('token', "")
                 await AsyncStorage.setItem('id', "")
-                token = ""
-                id = ""
+                this.setState({ token: "", id: "" });
             })
             .catch((error) => {
                 console.log(error);
             })
     }
 
-    const takePhoto = async () => {
-        navigation.navigate('Camera')
+    editProfile = () => {
+        this.props.navigation.navigate('Edit Profile')
     }
 
-    if (loading) {
-        return (
-            <View>
-                <ActivityIndicator
-                    size="large"
-                    color="#00ff00"
-                />
-            </View>
-        );
-    } else {
-        return (
-            <View style={{ padding: 5 }}>
-                <Image
-                    source={{
-                        uri: photo,
-                    }}
-                    style={{
-                        width: (Dimensions.get('window').width) - 10,
-                        height: (Dimensions.get('window').width) - 10
-                    }}
-                />
-                <Button
-                    title="Take a picture"
-                    onPress={() => takePhoto()}
-                />
-                <Text>{firstName} {lastName}</Text>
-                <Text>Email: {email}</Text>
-                <Text>Friends: {friendCount}</Text>
-                <Button
-                    title="Logout"
-                    onPress={() => handleLogout()}
-                />
-            </View>
-        );
+    render() {
+        if (this.state.loading) {
+            return (
+                <View>
+                    <ActivityIndicator
+                        size="large"
+                        color="#00ff00"
+                    />
+                </View>
+            );
+        } else {
+            return (
+                <View style={{ padding: 5 }}>
+                    <Image
+                        source={{
+                            uri: this.state.photo,
+                        }}
+                        style={{
+                            width: (Dimensions.get('window').width) - 10,
+                            height: (Dimensions.get('window').width) - 10
+                        }}
+                    />
+
+                    <Text>{this.state.firstName} {this.state.lastName}</Text>
+                    <Text>Email: {this.state.email}</Text>
+                    <Text>Friends: {this.state.friendCount}</Text>
+                    <Button
+                        title="Edit Profile"
+                        onPress={() => this.editProfile()}
+                    />
+                    <Button
+                        title="Logout"
+                        onPress={() => this.handleLogout()}
+                    />
+                </View>
+            );
+        }
     }
 }
 
