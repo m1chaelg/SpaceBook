@@ -115,14 +115,14 @@ class ProfileScreen extends Component {
             );
         } else {
             return (
-                <View style={{ padding: 5 }}>
+                <View style={{ padding: 10 }}>
                     <Image
                         source={{
                             uri: this.state.photo,
                         }}
                         style={{
-                            width: (Dimensions.get('window').width) - 10,
-                            height: (Dimensions.get('window').width) - 10
+                            width: (Dimensions.get('window').width) - 20,
+                            height: (Dimensions.get('window').width) - 20
                         }}
                     />
 
@@ -131,10 +131,15 @@ class ProfileScreen extends Component {
                     <Text>Friends: {this.state.friendCount}</Text>
                     <Button
                         title="Edit Profile"
+                        style={{ marginTop: 5,
+                            padding: 10 }}
                         onPress={() => this.editProfile()}
                     />
+
                     <Button
                         title="Logout"
+                        style={{ marginTop: 5,
+                            padding: 10 }}
                         onPress={() => this.handleLogout()}
                     />
                 </View>

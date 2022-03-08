@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { Text, TextInput, View, Button, ActivityIndicator, Image } from 'react-native';
+import { Text, TextInput, View, Button, ActivityIndicator, Image, FlatList, SafeAreaView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dimensions } from 'react-native';
 
@@ -27,7 +27,7 @@ class FriendScreen extends Component {
 
         this.focusListener = this.props.navigation.addListener('focus', () => {
             this.getFriends()
-          });
+        });
     }
 
     getFriends = async () => {
@@ -40,7 +40,6 @@ class FriendScreen extends Component {
         })
             .then((response) => response.json())
             .then((response) => {
-                console.log(response)
                 this.setState({
                     friends: response,
                 });
@@ -49,6 +48,10 @@ class FriendScreen extends Component {
                 console.log(error);
             })
     }
+
+    myItemSeparator = () => {
+        return <View style={{ height: 1, backgroundColor: "grey", marginHorizontal:10, marginTop: 5,}} />;
+        };
 
     render() {
         if (this.state.loading) {
@@ -62,9 +65,30 @@ class FriendScreen extends Component {
             );
         } else {
             return (
-                <View style={{ padding: 5 }}>
-                    <Text>Test</Text>
-                </View>
+                <SafeAreaView style={{ padding: 10 }}>
+                    <FlatList
+                        data={this.state.friends}
+                        ItemSeparatorComponent={this.myItemSeparator}
+                        ListHeaderComponent={() => (
+                            <Text style={{ fontSize: 30, textAlign: "center",marginTop:20,fontWeight:'bold',textDecorationLine: 'underline' }}>
+                              Friends
+                            </Text>
+                          )}
+                        renderItem={({ item }) =>
+                            <View>
+                                <Text style={{  marginTop: 5, padding: 20 }}>{item.user_givenname} {item.user_familyname}</Text>
+                                <Button
+                                    title="View"
+                                    style={{
+                                        width: '300',
+                                        alignItems: 'right'
+                                    }}
+                                    onPress={() => alert("Clicked" + item.user_id)}
+                                />
+                            </View>}
+                        keyExtractor={(item) => item.user_id}
+                    />
+                </SafeAreaView>
             );
         }
     }
