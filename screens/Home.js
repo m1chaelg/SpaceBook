@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ProfileScreen from './Profile';
+import FriendScreen from './Friends';
 
 function Feed() {
   return (
@@ -52,9 +53,9 @@ function MyTabs() {
       />
       <Tab.Screen
         name="Friends"
-        component={Notifications}
+        component={FriendScreen}
         options={{
-          tabBarLabel: 'Updates',
+          tabBarLabel: 'Friends',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="bell" color={color} size={size} />
           ),
