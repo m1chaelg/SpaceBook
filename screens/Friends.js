@@ -2,6 +2,8 @@ import React, { Component, useState, useEffect } from 'react';
 import { Text, TextInput, View, Button, ActivityIndicator, Image, FlatList, SafeAreaView, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dimensions } from 'react-native';
+import { SearchBar } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class FriendScreen extends Component {
     constructor(props) {
@@ -12,6 +14,7 @@ class FriendScreen extends Component {
             loading: true,
             friends: [],
             friendrequests: [],
+            search: ""
         }
     }
 
@@ -88,8 +91,21 @@ class FriendScreen extends Component {
     }
 
     myItemSeparator = () => {
-        return <View style={{ height: 1, backgroundColor: "grey", marginHorizontal:10, marginTop: 5}} />;
-        };
+        return <View style={{ height: 1, backgroundColor: "grey", marginHorizontal: 10, marginTop: 5 }} />;
+    };
+
+    goToProfile(id, first, last) {
+        this.props.navigation.navigate('Friend Profile', {
+            user_id: id,
+            name: first + " " + last
+        });
+    }
+
+    searchFriends() {
+        this.props.navigation.navigate('Find Friends', {
+            friends: this.state.friends
+        })
+    }
 
     render() {
         if (this.state.loading) {
@@ -104,18 +120,25 @@ class FriendScreen extends Component {
         } else {
             return (
                 <SafeAreaView style={{ padding: 10 }}>
+                    <SearchBar
+                        placeholder="Find friends..."
+                        onChangeText={this.updateSearch}
+                        value={this.state.search}
+                        platform="android"
+                        onClick={() => this.searchFriends()}
+                    />
                     <ScrollView>
-                    <FlatList
+                        <FlatList
                             data={this.state.friendrequests}
                             ItemSeparatorComponent={this.myItemSeparator}
                             ListHeaderComponent={() => (
-                                <Text style={{ fontSize: 30, textAlign: "center",marginTop:20,fontWeight:'bold',textDecorationLine: 'underline' }}>
-                                Friend Requests
+                                <Text style={{ fontSize: 30, textAlign: "center", marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline' }}>
+                                    Friend Requests
                                 </Text>
                             )}
                             renderItem={({ item }) =>
                                 <View>
-                                    <Text style={{  marginTop: 5}}>{item.first_name} {item.last_name}</Text>
+                                    <Text style={{ marginTop: 5 }}>{item.first_name} {item.last_name}</Text>
                                     <Button
                                         title="Accept"
                                         onPress={() => this.friendRequest(item.user_id, "POST")}
@@ -131,20 +154,20 @@ class FriendScreen extends Component {
                             data={this.state.friends}
                             ItemSeparatorComponent={this.myItemSeparator}
                             ListHeaderComponent={() => (
-                                <Text style={{ fontSize: 30, textAlign: "center",marginTop:20,fontWeight:'bold',textDecorationLine: 'underline' }}>
-                                Friends
+                                <Text style={{ fontSize: 30, textAlign: "center", marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline' }}>
+                                    Friends
                                 </Text>
                             )}
                             renderItem={({ item }) =>
                                 <View>
-                                    <Text style={{  marginTop: 5, padding: 20 }}>{item.user_givenname} {item.user_familyname}</Text>
+                                    <Text style={{ marginTop: 5, padding: 20 }}>{item.user_givenname} {item.user_familyname}</Text>
                                     <Button
                                         title="View"
                                         style={{
                                             width: '300',
                                             alignItems: 'right'
                                         }}
-                                        onPress={() => alert("Clicked " + item.user_id)}
+                                        onPress={() => this.goToProfile(item.user_id, item.user_givenname, item.user_familyname)}
                                     />
                                 </View>}
                             keyExtractor={(item) => item.user_id}
