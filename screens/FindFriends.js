@@ -72,7 +72,7 @@ class FindFriendsScreen extends Component {
             }
         })
             .catch((error) => {
-                
+
                 console.log(error)
             })
     }
@@ -94,6 +94,10 @@ class FindFriendsScreen extends Component {
         return <View style={{ height: 1, backgroundColor: "grey", marginHorizontal: 10, marginTop: 5 }} />;
     };
 
+    goBack() {
+        this.props.navigation.goBack(null)
+    }
+
     render() {
         if (this.state.loading) {
             return (
@@ -113,35 +117,38 @@ class FindFriendsScreen extends Component {
                         value={this.state.search}
                         platform="android"
                         autoFocus={true}
+                        onCancel={() => this.goBack()}
                     />
-                    <FlatList
-                        data={this.state.results}
-                        ItemSeparatorComponent={this.myItemSeparator}
-                        renderItem={({ item }) =>
-                            <View>
-                                <Text style={{ marginTop: 5, padding: 20 }}>{item.user_givenname} {item.user_familyname}</Text>
-                                {this.isFriend(item.user_id) ?
-                                    <Button
-                                        title="View Profile"
-                                        style={{
-                                            width: '300',
-                                            alignItems: 'right'
-                                        }}
-                                        onPress={() => this.goToProfile(item.user_id, item.user_givenname, item.user_familyname)}
-                                    />
-                                    :
-                                    <Button
-                                        title="Send Friend Request"
-                                        style={{
-                                            width: '300',
-                                            alignItems: 'right'
-                                        }}
-                                        onPress={() => this.sendFriendReq(item.user_id)}
-                                    />}
+                    <ScrollView>
+                        <FlatList
+                            data={this.state.results}
+                            ItemSeparatorComponent={this.myItemSeparator}
+                            renderItem={({ item }) =>
+                                <View>
+                                    <Text style={{ marginTop: 5, padding: 20 }}>{item.user_givenname} {item.user_familyname}</Text>
+                                    {this.isFriend(item.user_id) ?
+                                        <Button
+                                            title="View Profile"
+                                            style={{
+                                                width: '300',
+                                                alignItems: 'right'
+                                            }}
+                                            onPress={() => this.goToProfile(item.user_id, item.user_givenname, item.user_familyname)}
+                                        />
+                                        :
+                                        <Button
+                                            title="Send Friend Request"
+                                            style={{
+                                                width: '300',
+                                                alignItems: 'right'
+                                            }}
+                                            onPress={() => this.sendFriendReq(item.user_id)}
+                                        />}
                                     <Text></Text>
-                            </View>}
-                        keyExtractor={(item) => item.user_id}
-                    />
+                                </View>}
+                            keyExtractor={(item) => item.user_id}
+                        />
+                    </ScrollView>
                 </SafeAreaView>
             );
         }

@@ -5,30 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ProfileScreen from './Profile';
 import FriendScreen from './Friends';
-
-function Feed() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Feed!</Text>
-    </View>
-  );
-}
-
-function Profile() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Profile!</Text>
-    </View>
-  );
-}
-
-function Notifications() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Notifications!</Text>
-    </View>
-  );
-}
+import PostsScreen from './Posts';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,10 +19,10 @@ function MyTabs() {
       }}
     >
       <Tab.Screen
-        name="Feed"
-        component={Feed}
+        name="Posts"
+        component={PostsScreen}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: 'Posts',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={size} />
           ),
