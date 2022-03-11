@@ -9,6 +9,7 @@ import CameraScreen from './screens/Camera';
 import EditProfileScreen from './screens/EditProfile';
 import FriendProfileScreen from './screens/FriendProfile';
 import FindFriendsScreen from './screens/FindFriends';
+import PostScreen from './screens/Post';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ export default function App() {
         <Stack.Screen name="Friend Profile" component={FriendProfileScreen} options={({ route }) => ({ title: route.params.name })} />
         <Stack.Screen name="Camera" component={CameraScreen} />
         <Stack.Screen name="Find Friends" component={FindFriendsScreen} />
+        <Stack.Screen name="Post" component={PostScreen} />
         <Stack.Screen name="Home"
           component={HomeScreen}
           options={{

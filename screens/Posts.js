@@ -54,12 +54,38 @@ class PostsScreen extends Component {
 
     setLiked = async (item) => {
         let newLikes = this.state.likes.slice() //copy the array
-        if(newLikes[item.post_id] == null) {
+        if (newLikes[item.post_id] == null) {
             newLikes[item.post_id] = true
         } else {
             newLikes[item.post_id] = !newLikes[item.post_id]
         }
-        this.setState({likes: newLikes}) //set the new state
+        this.setState({ likes: newLikes }) //set the new state
+    }
+
+    sendLike = async () => {
+        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.id + "/post", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-authorization': this.state.token
+            }
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                this.setState({
+                    posts: response,
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+    editPost(item) {
+        this.props.navigation.navigate('Post', {
+            post_id: item.post_id,
+            post: item
+        });
     }
 
     postCard = (item) => {
@@ -79,24 +105,19 @@ class PostsScreen extends Component {
                     />
                     <Text>{item.numLikes} Likes</Text>
                 </Pressable>
+                {this.state.id == item.author.user_id ?
+                <Button
+                title="Edit post"
+                style={{
+                    width: '300',
+                    alignItems: 'right'
+                }}
+                onPress={() => this.editPost(item)}
+            />
+            : 
+            <Text></Text>}
             </Card>
         )
-
-        /*
-        {
-            "post_id": 9,
-            "text": "This is my wall yo",
-            "timestamp": "2022-03-10T14:12:58.000Z",
-            "author": {
-                "user_id": 8,
-                "first_name": "Michael",
-                "last_name": "Goodfellow",
-                "email": "mg@mmu.ac.uk"
-            },
-            "numLikes": 0
-        }
-        */
-
     }
 
     render() {
@@ -111,20 +132,20 @@ class PostsScreen extends Component {
             );
         } else {
             return (
-                <SafeAreaView style={{ padding: 10 }}>
-                    <ScrollView>
-                        <FlatList
-                            data={this.state.posts}
-                            ListHeaderComponent={() => (
-                                <Text style={{ fontSize: 30, textAlign: "center", marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline' }}>
-                                    Posts
-                                </Text>
-                            )}
-                            renderItem={(item) => this.postCard(item.item)}
-                            keyExtractor={(item) => item.post_id}
-                        />
+                    <ScrollView style={{flexGrow : 1}}>
+                        <SafeAreaView style={{ padding: 10 }}>
+                            <FlatList
+                                data={this.state.posts}
+                                ListHeaderComponent={() => (
+                                    <Text style={{ fontSize: 30, textAlign: "center", marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline' }}>
+                                        Posts
+                                    </Text>
+                                )}
+                                renderItem={(item) => this.postCard(item.item)}
+                                keyExtractor={(item) => item.post_id}
+                            />
+                        </SafeAreaView>
                     </ScrollView>
-                </SafeAreaView>
             );
         }
     }

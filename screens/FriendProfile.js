@@ -1,7 +1,9 @@
 import React, { Component, useState, useEffect } from 'react';
-import { Text, TextInput, View, Button, ActivityIndicator, Image } from 'react-native';
+import { Text, TextInput, View, Button, ActivityIndicator, Image, FlatList, SafeAreaView, ScrollView, TouchableHighlight, Pressable, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Dimensions } from 'react-native';
+import Moment from 'moment';
+import { Card } from 'react-native-elements';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 class FriendProfileScreen extends Component {
     constructor(props) {
@@ -15,7 +17,9 @@ class FriendProfileScreen extends Component {
             email: "",
             friendCount: "",
             photo: null,
-            loading: true
+            loading: true,
+            posts: [],
+            likes: [],
         }
     }
 
@@ -28,11 +32,13 @@ class FriendProfileScreen extends Component {
         });
         this.getProfile()
         this.getProfilePic()
+        this.getPosts()
         this.setState({ loading: false })
 
         this.focusListener = this.props.navigation.addListener('focus', () => {
             this.getProfile()
             this.getProfilePic()
+            this.getPosts()
           });
     }
 
@@ -77,6 +83,46 @@ class FriendProfileScreen extends Component {
             });
     }
 
+    postCard = (item) => {
+        let dateTime = Moment(item.timestamp).format('MMMM Do YYYY, h:mm:ss a')
+        return (
+            <Card containerStyle={{ padding: 5 }}>
+                <Card.Title>{item.text}</Card.Title>
+                <Card.Divider />
+                <Text>{item.author.first_name} {item.author.last_name}</Text>
+                <Text>{dateTime}</Text>
+                <Card.Divider />
+                <Pressable onPress={() => this.setLiked(item)}>
+                    <MaterialCommunityIcons
+                        name={this.state.likes[item.post_id] ? "heart" : "heart-outline"}
+                        size={32}
+                        color={this.state.likes[item.post_id] ? "red" : "black"}
+                    />
+                    <Text>{item.numLikes} Likes</Text>
+                </Pressable>
+            </Card>
+        )
+    }
+
+    getPosts = async () => {
+        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.friendId + "/post", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-authorization': this.state.token
+            }
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                this.setState({
+                    posts: response,
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
     myItemSeparator = () => {
         return <View style={{ height: 1, backgroundColor: "grey", marginHorizontal: 10, marginTop: 5 }} />;
     };
@@ -93,7 +139,7 @@ class FriendProfileScreen extends Component {
             );
         } else {
             return (
-                <View style={{ padding: 10 }}>
+                <SafeAreaView style={{ padding: 10 }}>
                     <Image
                         source={{
                             uri: this.state.photo,
@@ -108,7 +154,19 @@ class FriendProfileScreen extends Component {
                     <Text>Email: {this.state.email}</Text>
                     <Text>Friends: {this.state.friendCount}</Text>
                     
-                </View>
+                    <ScrollView>
+                        <FlatList
+                            data={this.state.posts}
+                            ListHeaderComponent={() => (
+                                <Text style={{ fontSize: 30, textAlign: "center", marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline' }}>
+                                    Posts
+                                </Text>
+                            )}
+                            renderItem={(item) => this.postCard(item.item)}
+                            keyExtractor={(item) => item.post_id}
+                        />
+                    </ScrollView>
+                </SafeAreaView>
             );
         }
     }
