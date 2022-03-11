@@ -14,6 +14,8 @@ class PostsScreen extends Component {
             loading: true,
             posts: [],
             likes: [],
+            newPost: "",
+            status: "",
         }
     }
 
@@ -84,7 +86,8 @@ class PostsScreen extends Component {
     editPost(item) {
         this.props.navigation.navigate('Post', {
             post_id: item.post_id,
-            post: item
+            post: item,
+            wall_id: this.state.id,
         });
     }
 
@@ -106,18 +109,42 @@ class PostsScreen extends Component {
                     <Text>{item.numLikes} Likes</Text>
                 </Pressable>
                 {this.state.id == item.author.user_id ?
-                <Button
-                title="Edit post"
-                style={{
-                    width: '300',
-                    alignItems: 'right'
-                }}
-                onPress={() => this.editPost(item)}
-            />
-            : 
-            <Text></Text>}
+                    <Button
+                        title="Edit post"
+                        style={{
+                            width: '300',
+                            alignItems: 'right'
+                        }}
+                        onPress={() => this.editPost(item)}
+                    />
+                    :
+                    <Text></Text>}
             </Card>
         )
+    }
+
+    newPost = async () => {
+        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.id + "/post", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-authorization': this.state.token
+            },
+            body: JSON.stringify({ text: this.state.newPost })
+        })
+            .then((response) => {
+                if (response.status == 200) {
+                    this.setState({status: "Posted."})
+                }
+            })
+            .catch((error) => {
+                this.setState({status: error})
+                console.log(error);
+            })
+            .finally(() => {
+                this.setState({newPost: ""})
+                this.getPosts()
+            })
     }
 
     render() {
@@ -132,20 +159,42 @@ class PostsScreen extends Component {
             );
         } else {
             return (
-                    <ScrollView style={{flexGrow : 1}}>
-                        <SafeAreaView style={{ padding: 10 }}>
-                            <FlatList
-                                data={this.state.posts}
-                                ListHeaderComponent={() => (
-                                    <Text style={{ fontSize: 30, textAlign: "center", marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline' }}>
-                                        Posts
-                                    </Text>
-                                )}
-                                renderItem={(item) => this.postCard(item.item)}
-                                keyExtractor={(item) => item.post_id}
+                <ScrollView style={{ flexGrow: 1 }}>
+                    <SafeAreaView style={{ padding: 10 }}>
+                        <Card containerStyle={{ padding: 5 }}>
+                            <Card.Title>Post something:</Card.Title>
+                            <Card.Divider />
+                            <TextInput
+                                style={{ flex: 1, width: "100%", backgroundColor: "white" }}
+                                onChangeText={(newPost) => this.setState({ newPost })}
+                                multiline
+                                numberOfLines={4}
+                                value={this.state.newPost}
+                                placeholder="Enter message here..."
                             />
-                        </SafeAreaView>
-                    </ScrollView>
+                            <Card.Divider />
+                            <Button
+                                title="Submit"
+                                style={{
+                                    width: '300',
+                                    alignItems: 'right'
+                                }}
+                                onPress={() => this.newPost()}
+                            />
+                            <Text>{this.state.status}</Text>
+                        </Card>
+                        <FlatList
+                            data={this.state.posts}
+                            ListHeaderComponent={() => (
+                                <Text style={{ fontSize: 30, textAlign: "center", marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline' }}>
+                                    Posts
+                                </Text>
+                            )}
+                            renderItem={(item) => this.postCard(item.item)}
+                            keyExtractor={(item) => item.post_id}
+                        />
+                    </SafeAreaView>
+                </ScrollView>
             );
         }
     }

@@ -16,6 +16,7 @@ class PostScreen extends Component {
             postId: 0,
             editText: "",
             status: "Click submit when you've finished editing.",
+            wallId: 0,
         }
     }
 
@@ -28,6 +29,7 @@ class PostScreen extends Component {
             post: this.props.route.params.post,
             editText: this.props.route.params.post.text,
             status: "",
+            wallId: this.props.route.params.wall_id,
         });
 
         this.fetchPost()
@@ -40,7 +42,7 @@ class PostScreen extends Component {
     }
 
     fetchPost = async () => {
-        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.id + "/post/" + this.state.postId, {
+        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.wallId + "/post/" + this.state.postId, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +61,7 @@ class PostScreen extends Component {
     }
 
     updatePost = async () => {
-        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.id + "/post/" + this.state.postId, {
+        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.wallId + "/post/" + this.state.postId, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +82,7 @@ class PostScreen extends Component {
     }
 
     deletePost = async () => {
-        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.id + "/post/" + this.state.postId, {
+        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.wallId + "/post/" + this.state.postId, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
@@ -92,10 +94,12 @@ class PostScreen extends Component {
                 this.setState({
                     status: response,
                 });
-                this.props.navigation.goBack(null)
             })
             .catch((error) => {
                 console.log(error);
+            })
+            .finally(() => {
+                this.props.navigation.goBack(null)
             })
     }
 

@@ -20,6 +20,8 @@ class FriendProfileScreen extends Component {
             loading: true,
             posts: [],
             likes: [],
+            newPost: "",
+            status: "",
         }
     }
 
@@ -39,7 +41,7 @@ class FriendProfileScreen extends Component {
             this.getProfile()
             this.getProfilePic()
             this.getPosts()
-          });
+        });
     }
 
     getProfile = async () => {
@@ -83,6 +85,14 @@ class FriendProfileScreen extends Component {
             });
     }
 
+    editPost(item) {
+        this.props.navigation.navigate('Post', {
+            post_id: item.post_id,
+            wall_id: this.state.friendId,
+            post: item
+        });
+    }
+
     postCard = (item) => {
         let dateTime = Moment(item.timestamp).format('MMMM Do YYYY, h:mm:ss a')
         return (
@@ -100,6 +110,17 @@ class FriendProfileScreen extends Component {
                     />
                     <Text>{item.numLikes} Likes</Text>
                 </Pressable>
+                {this.state.id == item.author.user_id ?
+                    <Button
+                        title="Edit post"
+                        style={{
+                            width: '300',
+                            alignItems: 'right'
+                        }}
+                        onPress={() => this.editPost(item)}
+                    />
+                    :
+                    <Text></Text>}
             </Card>
         )
     }
@@ -120,6 +141,30 @@ class FriendProfileScreen extends Component {
             })
             .catch((error) => {
                 console.log(error);
+            })
+    }
+
+    newPost = async () => {
+        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.friendId + "/post", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-authorization': this.state.token
+            },
+            body: JSON.stringify({ text: this.state.newPost })
+        })
+            .then((response) => {
+                if (response.status == 200) {
+                    this.setState({ status: "Posted." })
+                }
+            })
+            .catch((error) => {
+                this.setState({ status: error })
+                console.log(error);
+            })
+            .finally(() => {
+                this.setState({ newPost: "" })
+                this.getPosts()
             })
     }
 
@@ -153,7 +198,30 @@ class FriendProfileScreen extends Component {
                     <Text>{this.state.firstName} {this.state.lastName}</Text>
                     <Text>Email: {this.state.email}</Text>
                     <Text>Friends: {this.state.friendCount}</Text>
-                    
+
+                    <Card containerStyle={{ padding: 5 }}>
+                        <Card.Title>Post something:</Card.Title>
+                        <Card.Divider />
+                        <TextInput
+                            style={{ flex: 1, width: "100%", backgroundColor: "white" }}
+                            onChangeText={(newPost) => this.setState({ newPost })}
+                            multiline
+                            numberOfLines={4}
+                            value={this.state.newPost}
+                            placeholder="Enter message here..."
+                        />
+                        <Card.Divider />
+                        <Button
+                            title="Submit"
+                            style={{
+                                width: '300',
+                                alignItems: 'right'
+                            }}
+                            onPress={() => this.newPost()}
+                        />
+                        <Text>{this.state.status}</Text>
+                    </Card>
+
                     <ScrollView>
                         <FlatList
                             data={this.state.posts}
