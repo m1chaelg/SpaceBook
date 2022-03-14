@@ -1,11 +1,10 @@
 module.exports = {
   'env': {
-    'browser': true,
-    'es2021': true,
     'react-native/react-native': true,
   },
   'extends': [
     'google',
+    'plugin:react/recommended',
   ],
   'parserOptions': {
     'ecmaFeatures': {
@@ -19,5 +18,8 @@ module.exports = {
     'react-native'
   ],
   'rules': {
+    "require-jsdoc" : 0,
+    "no-unused-vars": "warn",
+    "react/prop-types": 0
   },
 };

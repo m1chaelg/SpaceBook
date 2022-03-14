@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
 import ProfileScreen from './Profile';
 import FriendScreen from './Friends';
 import PostsScreen from './Posts';
@@ -13,7 +13,7 @@ function MyTabs() {
       initialRouteName="Feed"
       screenOptions={{
         tabBarActiveTintColor: '#1e54e9',
-        headerShown: false
+        headerShown: false,
       }}
     >
       <Tab.Screen
@@ -21,7 +21,7 @@ function MyTabs() {
         component={PostsScreen}
         options={{
           tabBarLabel: 'Posts',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons name="home" color={color} size={size} />
           ),
         }}
@@ -31,7 +31,7 @@ function MyTabs() {
         component={FriendScreen}
         options={{
           tabBarLabel: 'Friends',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons name="contacts" color={color} size={size} />
           ),
         }}
@@ -41,7 +41,7 @@ function MyTabs() {
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Profile',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
           ),
         }}
@@ -51,9 +51,9 @@ function MyTabs() {
 }
 
 const HomeScreen = () => {
-    return (
-          <MyTabs />
-      );
-}
+  return (
+    <MyTabs />
+  );
+};
 
 export default HomeScreen;

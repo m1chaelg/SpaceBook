@@ -1,7 +1,7 @@
-import React, { Component, useState } from 'react';
-import { Text, TextInput, View, Button } from 'react-native';
+import React, {useState} from 'react';
+import {Text, TextInput, View, Button} from 'react-native';
 
-const RegisterScreen = ({ navigation }) => {
+const RegisterScreen = ({navigation}) => {
   const [firstName, setFirst] = useState('');
   const [lastName, setLast] = useState('');
   const [email, setEmail] = useState('');
@@ -11,54 +11,58 @@ const RegisterScreen = ({ navigation }) => {
   const [hasRegistered, setHasRegistered] = useState(false);
 
   const register = () => {
-    if(!hasRegistered) {
-      setStatus("Registering...")
-      return fetch("http://localhost:3333/api/1.0.0/user", {
-        method: "POST",
+    if (!hasRegistered) {
+      setStatus('Registering...');
+      return fetch('http://localhost:3333/api/1.0.0/user', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({first_name: firstName, last_name: lastName, email: email, password: password})
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          password: password}),
       })
-        .then((response) => response.json())
-        .then((response) => {
-          setStatus("User successfully created.")
-          setHasRegistered(true)
-          setRegBtn("Go back")
-        })
-        .catch((error) => {
-          console.log(error);
-          setStatus("User or email already exists.")
-        })
+          .then((response) => response.json())
+          .then((response) => {
+            setStatus('User successfully created.');
+            setHasRegistered(true);
+            setRegBtn('Go back');
+          })
+          .catch((error) => {
+            console.log(error);
+            setStatus('User or email already exists.');
+          });
     } else {
-      navigation.goBack(null)
+      navigation.goBack(null);
     }
-  }
+  };
 
   return (
     <View style={{padding: 10}}>
       <TextInput
         style={{height: 40}}
         placeholder="First name"
-        onChangeText={ value => setFirst(value)}
+        onChangeText={ (value) => setFirst(value)}
         value={firstName}
       />
       <TextInput
         style={{height: 40}}
         placeholder="Last name"
-        onChangeText={ value => setLast(value)}
+        onChangeText={ (value) => setLast(value)}
         value={lastName}
       />
       <TextInput
         style={{height: 40}}
         placeholder="Email"
-        onChangeText={ value => setEmail(value)}
+        onChangeText={ (value) => setEmail(value)}
         value={email}
       />
       <TextInput
         style={{height: 40}}
         placeholder="Password"
-        onChangeText={ value => setPassword(value)}
+        onChangeText={ (value) => setPassword(value)}
         value={password}
         secureTextEntry='true'
       />
@@ -69,6 +73,6 @@ const RegisterScreen = ({ navigation }) => {
       <Text>{status}</Text>
     </View>
   );
-}
+};
 
 export default RegisterScreen;
