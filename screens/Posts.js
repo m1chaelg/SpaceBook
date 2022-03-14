@@ -100,14 +100,7 @@ class PostsScreen extends Component {
                 <Text>{item.author.first_name} {item.author.last_name}</Text>
                 <Text>{dateTime}</Text>
                 <Card.Divider />
-                <Pressable onPress={() => this.setLiked(item)}>
-                    <MaterialCommunityIcons
-                        name={this.state.likes[item.post_id] ? "heart" : "heart-outline"}
-                        size={32}
-                        color={this.state.likes[item.post_id] ? "red" : "black"}
-                    />
-                    <Text>{item.numLikes} Likes</Text>
-                </Pressable>
+                <Text>{item.numLikes} Likes</Text>
                 {this.state.id == item.author.user_id ?
                     <Button
                         title="Edit post"

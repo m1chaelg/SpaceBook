@@ -93,6 +93,22 @@ class FriendProfileScreen extends Component {
         });
     }
 
+    likeOrUnlikePost = async (item, method) => {
+        console.log(item)
+        return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.friendId + "/post/" + item.post_id + "/like", {
+            method: method,
+            headers: {
+                'X-authorization': this.state.token
+            }
+        })
+            .then(() => {
+                this.getPosts();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
     postCard = (item) => {
         let dateTime = Moment(item.timestamp).format('MMMM Do YYYY, h:mm:ss a')
         return (
@@ -102,14 +118,23 @@ class FriendProfileScreen extends Component {
                 <Text>{item.author.first_name} {item.author.last_name}</Text>
                 <Text>{dateTime}</Text>
                 <Card.Divider />
-                <Pressable onPress={() => this.setLiked(item)}>
-                    <MaterialCommunityIcons
-                        name={this.state.likes[item.post_id] ? "heart" : "heart-outline"}
-                        size={32}
-                        color={this.state.likes[item.post_id] ? "red" : "black"}
-                    />
-                    <Text>{item.numLikes} Likes</Text>
-                </Pressable>
+                <Button
+                    title="Like"
+                    style={{
+                        width: '300',
+                        alignItems: 'right'
+                    }}
+                    onPress={() => this.likeOrUnlikePost(item, "POST")}
+                />
+                <Button
+                    title="Unlike"
+                    style={{
+                        width: '300',
+                        alignItems: 'right'
+                    }}
+                    onPress={() => this.likeOrUnlikePost(item, "DELETE")}
+                />
+                <Text>{item.numLikes} Likes</Text>
                 {this.state.id == item.author.user_id ?
                     <Button
                         title="Edit post"
