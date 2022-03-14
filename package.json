@@ -30,7 +30,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@expo/webpack-config": "^0.16.18"
+    "@expo/webpack-config": "^0.16.18",
+    "eslint": "^8.11.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react-native": "^4.0.0",
+    "standard": "^16.0.4"
   },
   "private": true
 }

@@ -94,7 +94,6 @@ class FriendProfileScreen extends Component {
     }
 
     likeOrUnlikePost = async (item, method) => {
-        console.log(item)
         return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.friendId + "/post/" + item.post_id + "/like", {
             method: method,
             headers: {
