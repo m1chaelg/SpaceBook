@@ -213,6 +213,7 @@ class PostsScreen extends Component {
                 }}
                 onPress={() => this.savePost().then(() => this.saveDrafts())}
               />
+              <Card.Divider />
               <Text>{this.state.drafts.length} saved drafts</Text>
               <Button
                 title="View Drafts"

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button, ActivityIndicator, SafeAreaView, ScrollView, FlatList } from 'react-native';
+import { Text, View, Button, ActivityIndicator, SafeAreaView, ScrollView, FlatList, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card } from 'react-native-elements';
 
@@ -11,7 +11,8 @@ class DraftsScreen extends Component {
       id: 0,
       loading: true,
       drafts: [],
-      status: "",
+      status: "Save your edit before posting",
+      tempEdit: "",
     };
   }
 
@@ -26,18 +27,30 @@ class DraftsScreen extends Component {
     this.setState({ loading: false });
   }
 
-  postCard = (draft) => {
+  postCard = (draft, index) => {
     return (
       <Card containerStyle={{ padding: 5 }}>
-        <Card.Title>{draft}</Card.Title>
+        <TextInput
+          style={{height: 40}}
+          value={this.state.drafts[index]}
+          onChangeText={(value) => this.editDraft(value, index)}
+        />
         <Card.Divider />
+        <Button
+          title="Save Edit"
+          style={{
+            width: '300',
+            alignItems: 'right',
+          }}
+          onPress={() => {this.saveDrafts();}}
+        />
         <Button
           title="Post draft"
           style={{
             width: '300',
             alignItems: 'right',
           }}
-          onPress={() => {this.newPost(draft); this.forceUpdate()}}
+          onPress={() => {this.newPost(this.state.drafts[index]); this.forceUpdate()}}
         />
         <Button
           title="Delete draft"
@@ -45,11 +58,17 @@ class DraftsScreen extends Component {
             width: '300',
             alignItems: 'right',
           }}
-          onPress={() => this.deleteDraft(draft).then(() => this.saveDrafts())}
+          onPress={() => this.deleteDraft(this.state.drafts[index]).then(() => this.saveDrafts())}
         />
       </Card>
     );
   };
+
+  editDraft(value, index) {
+    var newArr = this.state.drafts
+    newArr[index] = value
+    this.setState({drafts: newArr})
+  }
 
   newPost = async (draft) => {
     return fetch('http://localhost:3333/api/1.0.0/user/' + this.state.id + '/post', {
@@ -118,7 +137,7 @@ class DraftsScreen extends Component {
                   Drafts
                 </Text>
               )}
-              renderItem={(item) => this.postCard(item.item)}
+              renderItem={({item, index}) => this.postCard(item.item, index)}
               keyExtractor={(item, index) => index}
             />
           </SafeAreaView>
