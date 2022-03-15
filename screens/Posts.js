@@ -16,6 +16,7 @@ class PostsScreen extends Component {
       likes: [],
       newPost: '',
       status: '',
+      drafts: [],
     };
   }
 
@@ -26,13 +27,24 @@ class PostsScreen extends Component {
       id: await AsyncStorage.getItem('id'),
     });
 
+    this.updateDrafts();
+
     this.getPosts();
 
     this.setState({loading: false});
 
     this.focusListener = this.props.navigation.addListener('focus', () => {
       this.getPosts();
+      this.updateDrafts();
     });
+  }
+
+  async updateDrafts() {
+    try {
+      this.setState({drafts: JSON.parse(await AsyncStorage.getItem('drafts'))})
+    } catch(err) {
+      this.setState({drafts: []})
+    }
   }
 
   getPosts = async () => {
@@ -52,16 +64,6 @@ class PostsScreen extends Component {
         .catch((error) => {
           console.log(error);
         });
-  };
-
-  setLiked = async (item) => {
-    const newLikes = this.state.likes.slice(); // copy the array
-    if (newLikes[item.post_id] == null) {
-      newLikes[item.post_id] = true;
-    } else {
-      newLikes[item.post_id] = !newLikes[item.post_id];
-    }
-    this.setState({likes: newLikes}); // set the new state
   };
 
   sendLike = async () => {
@@ -139,6 +141,36 @@ class PostsScreen extends Component {
         });
   };
 
+  savePost = async () => {
+    if(this.state.drafts === 0) {
+      var newArr = new Array()
+      newArr.push(this.state.newPost)
+      this.setState({drafts: newArr})
+    } else {
+      this.setState({
+        drafts: this.state.drafts.concat(this.state.newPost)
+      })
+    }
+  }
+
+  viewDrafts() {
+    this.props.navigation.navigate('Drafts', {
+      drafts: this.state.drafts
+    });
+  }
+
+  async saveDrafts () {
+    try {
+      await AsyncStorage.setItem('drafts', JSON.stringify(this.state.drafts))
+      .then(
+        () => AsyncStorage.getItem('drafts')
+              .then((result)=>console.log(result))
+     )
+    } catch(err) {
+      this.setState({status: err})
+    }
+  }
+
   render() {
     if (this.state.loading) {
       return (
@@ -172,6 +204,23 @@ class PostsScreen extends Component {
                   alignItems: 'right',
                 }}
                 onPress={() => this.newPost()}
+              />
+              <Button
+                title="Save as draft"
+                style={{
+                  width: '300',
+                  alignItems: 'right',
+                }}
+                onPress={() => this.savePost().then(() => this.saveDrafts())}
+              />
+              <Text>{this.state.drafts.length} saved drafts</Text>
+              <Button
+                title="View Drafts"
+                style={{
+                  width: '300',
+                  alignItems: 'right',
+                }}
+                onPress={() => this.viewDrafts()}
               />
               <Text>{this.state.status}</Text>
             </Card>

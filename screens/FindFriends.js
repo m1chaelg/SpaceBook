@@ -25,8 +25,8 @@ class FindFriendsScreen extends Component {
       token: await AsyncStorage.getItem('token'),
       id: await AsyncStorage.getItem('id'),
       friends: this.props.route.params.friends,
+      loading: false,
     });
-    this.setState({loading: false});
   }
 
   updateSearch = (search) => {

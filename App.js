@@ -10,6 +10,7 @@ import EditProfileScreen from './screens/EditProfile';
 import FriendProfileScreen from './screens/FriendProfile';
 import FindFriendsScreen from './screens/FindFriends';
 import PostScreen from './screens/Post';
+import DraftsScreen from './screens/Drafts';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ export default function App() {
         <Stack.Screen name="Camera" component={CameraScreen} />
         <Stack.Screen name="Find Friends" component={FindFriendsScreen} />
         <Stack.Screen name="Post" component={PostScreen} />
+        <Stack.Screen name="Drafts" component={DraftsScreen} />
         <Stack.Screen name="Home"
           component={HomeScreen}
           options={{
