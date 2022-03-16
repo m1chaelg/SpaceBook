@@ -4,6 +4,7 @@ import {Text, TextInput, View, Button, ActivityIndicator,
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card} from 'react-native-elements';
 import moment from 'moment';
+import styles from '../style/Styles'
 
 class PostsScreen extends Component {
   constructor(props) {
@@ -66,6 +67,28 @@ class PostsScreen extends Component {
         });
   };
 
+  deletePost = async (postId) => {
+    return fetch('http://localhost:3333/api/1.0.0/user/' + this.state.id + '/post/' + postId, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-authorization': this.state.token,
+      },
+    })
+        .then((response) => response.json())
+        .then((response) => {
+          this.setState({
+            status: response,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.getPosts();
+        });
+  };
+
   sendLike = async () => {
     return fetch('http://localhost:3333/api/1.0.0/user/' + this.state.id + '/post', {
       method: 'GET',
@@ -96,23 +119,36 @@ class PostsScreen extends Component {
   postCard = (item) => {
     const dateTime = moment(item.timestamp).format('MMMM Do YYYY, h:mm:ss a');
     return (
-      <Card containerStyle={{padding: 5}}>
-        <Card.Title>{item.text}</Card.Title>
-        <Card.Divider />
+      <Card containerStyle={styles.cardContainer}>
+        <Text style={styles.wallPost}>{item.text}</Text>
+        <Card.Divider style={styles.cardDivider} />
+        <View style={styles.horizontalContainer}>
+        <View style={styles.textContainer2}>
         <Text>{item.author.first_name} {item.author.last_name}</Text>
         <Text>{dateTime}</Text>
-        <Card.Divider />
+        </View>
+        <View style={styles.textContainer}>
         <Text>{item.numLikes} Likes</Text>
+        </View>
+        </View>
+        <Card.Divider style={styles.cardDivider} />
         {this.state.id == item.author.user_id ?
-                    <Button
-                      title="Edit post"
-                      style={{
-                        width: '300',
-                        alignItems: 'right',
-                      }}
-                      onPress={() => this.editPost(item)}
-                    /> :
-                    <Text></Text>}
+        <View style={styles.horizontalContainer}>
+        <View style={styles.buttonContainer}>
+        <Button
+        title="Edit post"
+        onPress={() => this.editPost(item)}
+        color="#7649fe"
+         />
+        </View>
+        <View style={styles.buttonContainer}>
+        <Button
+        title="Delete post"
+        onPress={() => this.deletePost(item.post_id)}
+        color="#ba1e68"
+         />
+        </View>
+        </View> : <Text></Text>}
       </Card>
     );
   };
@@ -172,6 +208,7 @@ class PostsScreen extends Component {
   }
 
   render() {
+    const draftBtn = "View Drafts ( " + this.state.drafts.length + " )"
     if (this.state.loading) {
       return (
         <View>
@@ -183,54 +220,50 @@ class PostsScreen extends Component {
       );
     } else {
       return (
-        <ScrollView style={{flexGrow: 1}}>
-          <SafeAreaView style={{padding: 10}}>
+        <ScrollView style={styles.scrollView}>
+          <SafeAreaView style={styles.safeAreaView}>
             <Card containerStyle={{padding: 5}}>
-              <Card.Title>Post something:</Card.Title>
+              <Card.Title style={styles.wallPost}>Post something:</Card.Title>
               <Card.Divider />
               <TextInput
-                style={{flex: 1, width: '100%', backgroundColor: 'white'}}
+                style={styles.textInput}
                 onChangeText={(newPost) => this.setState({newPost})}
                 multiline
                 numberOfLines={4}
                 value={this.state.newPost}
                 placeholder="Enter message here..."
               />
-              <Card.Divider />
+              <Card.Divider style={styles.cardDivider}/>
+              <View style={styles.horizontalContainer}>
+              <View style={styles.buttonContainer}>
               <Button
-                title="Submit"
-                style={{
-                  width: '300',
-                  alignItems: 'right',
-                }}
+                title="Submit post"
                 onPress={() => this.newPost()}
+                color="#5643fd"
               />
+              </View>
+              <View style={styles.buttonContainer}>
               <Button
                 title="Save as draft"
-                style={{
-                  width: '300',
-                  alignItems: 'right',
-                }}
                 onPress={() => this.savePost().then(() => this.saveDrafts())}
+                color="#7649fe"
               />
-              <Card.Divider />
-              <Text>{this.state.drafts.length} saved drafts</Text>
+              </View>
+              <View style={styles.buttonContainer}>
               <Button
-                title="View Drafts"
-                style={{
-                  width: '300',
-                  alignItems: 'right',
-                }}
+                title={draftBtn} 
                 onPress={() => this.viewDrafts()}
+                color="#7649fe"
               />
+              </View>
+            </View>
+              <Card.Divider style={styles.cardDivider} />
               <Text>{this.state.status}</Text>
             </Card>
             <FlatList
               data={this.state.posts}
               ListHeaderComponent={() => (
-                <Text style={{fontSize: 30, textAlign: 'center', marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline'}}>
-                                    Posts
-                </Text>
+                <Text style={styles.cardTitle}>Posts</Text>
               )}
               renderItem={(item) => this.postCard(item.item)}
               keyExtractor={(item) => item.post_id}

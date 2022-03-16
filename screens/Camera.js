@@ -52,7 +52,6 @@ class CameraScreen extends Component {
       };
       await this.camera.takePictureAsync(options);
     }
-    alert('Successfully uploaded picture');
   };
 
   render() {
@@ -73,6 +72,7 @@ class CameraScreen extends Component {
             title="Take Photo" onPress={() => {
               this.takePicture();
             }}
+            color="#5643fd"
           />
         </View>
       );

@@ -3,6 +3,7 @@ import {Text, TextInput, View, Button, ActivityIndicator, SafeAreaView, ScrollVi
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card} from 'react-native-elements';
 import moment from 'moment';
+import styles from '../style/Styles';
 
 class PostScreen extends Component {
   constructor(props) {
@@ -120,29 +121,34 @@ class PostScreen extends Component {
             <Card containerStyle={{padding: 5}}>
               <Card.Title>
                 <TextInput
-                  style={{flex: 1, width: '100%'}}
+                  style={styles.textInput}
+                  multiline
+                  numberOfLines={4}
                   onChangeText={(editText) => this.setState({editText})}
                   value={this.state.editText}
                   autoFocus={true}
                 /></Card.Title>
-              <Card.Divider />
+              <Card.Divider style={styles.cardDivider} />
               <Text>{this.state.post.author.first_name} {this.state.post.author.last_name}</Text>
               <Text>{dateTime}</Text>
-              <Card.Divider />
+              <Card.Divider style={styles.cardDivider} />
+              <View style={styles.horizontalContainer}>
+              <View style={styles.buttonContainer}>
               <Button
-                title="Submit"
-                style={{
-                  width: '300',
-                }}
-                onPress={() => this.updatePost()} />
+                title="Update"
+                onPress={() => this.updatePost(item)}
+                color="#7649fe"
+              />
+              </View>
               {this.state.post.numLikes == 0 ?
-                                <Button
-                                  title="Delete"
-                                  style={{
-                                    width: '300',
-                                  }}
-                                  onPress={() => this.deletePost()} /> :
-                                <Text></Text>}
+              <View style={styles.buttonContainer}>
+              <Button
+                title="Delete post"
+                onPress={() => this.deletePost(item.post_id)}
+                color="#ba1e68"
+              />
+              </View> : <Text></Text>}
+              </View>
             </Card>
             <Text>{this.state.status}</Text>
           </SafeAreaView>

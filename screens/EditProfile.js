@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {Text, TextInput, View,
+import {Text, TextInput, View, SafeAreaView,
   Button, ActivityIndicator, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Dimensions} from 'react-native';
+import styles from '../style/Styles';
+import { Card } from 'react-native-elements';
 
 const EditProfileScreen = ({navigation}) => {
   const [loading, setLoading] = useState(true);
@@ -83,7 +85,6 @@ const EditProfileScreen = ({navigation}) => {
         .then((response) => {
           if (response.status == 200) {
             console.log(response);
-            alert('Updated');
             navigation.goBack(null);
           } else {
             console.log(response);
@@ -106,43 +107,70 @@ const EditProfileScreen = ({navigation}) => {
     );
   } else {
     return (
-      <View style={{padding: 5}}>
+      <SafeAreaView style={styles.safeAreaView}>
+        <Card containerStyle={{padding: 5}}>
         <Image
-          source={{
-            uri: photo,
-          }}
+          source={{uri: photo}}
           style={{
-            width: (Dimensions.get('window').width) - 10,
-            height: (Dimensions.get('window').width) - 10,
+            width: (Dimensions.get('window').width) - 40,
+            height: (Dimensions.get('window').width) - 40,
           }}
         />
-        <Button
-          title="Update profile picture"
-          onPress={() => takePhoto()}
-        />
+        <Card.Divider style={styles.cardDivider} />
+        <View style={styles.centralButton}>
+          <Button
+            title="Update profile picture"
+            onPress={() => takePhoto()}
+            color="#7649fe"
+          />
+        </View>
+        <View style={styles.horizontalContainer}>
+        <View style={styles.textContainer}>
         <Text>First name:</Text>
+        </View>
+        <View style={styles.textContainer2}>
         <TextInput
           style={{height: 40}}
           placeholder={firstName}
           onChangeText={(value) => setFirstName(value)}
           value={firstName}
         />
+        </View>
+        </View>
+        <Card.Divider style={styles.cardDivider} />
+        <View style={styles.horizontalContainer}>
+        <View style={styles.textContainer}>
         <Text>Last name:</Text>
+        </View>
+        <View style={styles.textContainer2}>
         <TextInput
           style={{height: 40}}
           placeholder={lastName}
           onChangeText={(value) => setLastName(value)}
           value={lastName}
         />
+        </View>
+        </View>
+        <Card.Divider style={styles.cardDivider} />
+        <View style={styles.horizontalContainer}>
+        <View style={styles.textContainer}>
         <Text>Email:</Text>
+        </View>
+        <View style={styles.textContainer2}>
         <TextInput
           style={{height: 40}}
           placeholder={email}
           onChangeText={(value) => setEmail(value)}
           value={email}
         />
-        <Text>Enter a new password only if you wish to change,
-            otherwise leave blank:</Text>
+        </View>
+        </View>
+        <Card.Divider style={styles.cardDivider} />
+        <View style={styles.horizontalContainer}>
+        <View style={styles.textContainer}>
+        <Text>Password</Text>
+        </View>
+        <View style={styles.textContainer2}>
         <TextInput
           style={{height: 40}}
           placeholder="Password"
@@ -150,11 +178,18 @@ const EditProfileScreen = ({navigation}) => {
           value={password}
           secureTextEntry='true'
         />
+        </View>
+        </View>
+        <Card.Divider style={styles.cardDivider} />
+        <View style={styles.centralButton}>
         <Button
           title="Save"
           onPress={() => saveProfile()}
+          color="#5643fd"
         />
-      </View>
+        </View>
+      </Card>
+      </SafeAreaView>
     );
   }
 };

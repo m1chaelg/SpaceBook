@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {Text, View, Button,
-  ActivityIndicator, Image} from 'react-native';
+  ActivityIndicator, Image, SafeAreaView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Dimensions} from 'react-native';
+import styles from '../style/Styles';
+import { Card } from 'react-native-elements';
 
 class ProfileScreen extends Component {
   constructor(props) {
@@ -93,7 +95,6 @@ class ProfileScreen extends Component {
         .then(async () => {
           await AsyncStorage.setItem('token', '');
           await AsyncStorage.setItem('id', '');
-          this.setState({token: '', id: ''});
         })
         .catch((error) => {
           console.log(error);
@@ -116,34 +117,38 @@ class ProfileScreen extends Component {
       );
     } else {
       return (
-        <View style={{padding: 10}}>
+        <SafeAreaView style={styles.safeAreaView}>
+        <Card containerStyle={{padding: 5}}>
           <Image
             source={{
               uri: this.state.photo,
             }}
             style={{
-              width: (Dimensions.get('window').width) - 20,
-              height: (Dimensions.get('window').width) - 20,
+              width: "100%",
+              height: 300,
             }}
           />
-
+          <Card.Divider style={styles.cardDivider} />
           <Text>{this.state.firstName} {this.state.lastName}</Text>
           <Text>Email: {this.state.email}</Text>
           <Text>Friends: {this.state.friendCount}</Text>
+          <Card.Divider style={styles.cardDivider} />
+          <View style={styles.centralButton}>
           <Button
             title="Edit Profile"
-            style={{marginTop: 5,
-              padding: 10}}
             onPress={() => this.editProfile()}
+            color="#7649fe"
           />
-
+          </View>
+          <View style={styles.centralButton}>
           <Button
             title="Logout"
-            style={{marginTop: 5,
-              padding: 10}}
             onPress={() => this.handleLogout()}
+            color="#ba1e68"
           />
-        </View>
+          </View>
+          </Card>
+        </SafeAreaView>
       );
     }
   }

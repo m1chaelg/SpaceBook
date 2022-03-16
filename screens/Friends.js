@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {Text, View, Button, ActivityIndicator, FlatList,
   SafeAreaView, ScrollView} from 'react-native';
+import {Card} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SearchBar} from 'react-native-elements';
+import styles from '../style/Styles'
 
 class FriendScreen extends Component {
   constructor(props) {
@@ -90,7 +92,7 @@ class FriendScreen extends Component {
   };
 
   myItemSeparator = () => {
-    return <View style={{height: 1, backgroundColor: 'grey', marginHorizontal: 10, marginTop: 5}} />;
+    return <View style={styles.itemSeperator} />;
   };
 
   goToProfile(id, first, last) {
@@ -118,7 +120,7 @@ class FriendScreen extends Component {
       );
     } else {
       return (
-        <SafeAreaView style={{padding: 10}}>
+        <SafeAreaView style={styles.safeAreaView}>
           <SearchBar
             placeholder="Find friends..."
             onChangeText={this.updateSearch}
@@ -127,48 +129,57 @@ class FriendScreen extends Component {
             onClick={() => this.searchFriends()}
           />
           <ScrollView>
+          {this.state.friendrequests.length !== 0 ?
             <FlatList
               data={this.state.friendrequests}
               ItemSeparatorComponent={this.myItemSeparator}
               ListHeaderComponent={() => (
-                <Text style={{fontSize: 30, textAlign: 'center', marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline'}}>
-                                    Friend Requests
-                </Text>
+                <Text style={styles.cardTitle}>Friend Requests</Text>
               )}
               renderItem={({item}) =>
-                <View>
-                  <Text style={{marginTop: 5}}>{item.first_name} {item.last_name}</Text>
+                <Card containerStyle={{padding: 5}}>
+                  <Text style={styles.wallPost}>{item.first_name} {item.last_name}</Text>
+                  <View style={styles.horizontalContainer}>
+                  <View style={styles.buttonContainer}>
                   <Button
                     title="Accept"
                     onPress={() => this.friendRequest(item.user_id, 'POST')}
+                    color="#5643fd"
                   />
+                  </View>
+                  <View style={styles.buttonContainer}>
                   <Button
                     title="Reject"
                     onPress={() => this.friendRequest(item.user_id, 'DELETE')}
+                    color="#ba1e68"
                   />
-                </View>}
+                  </View>
+                  </View>
+                </Card>}
               keyExtractor={(item) => item.user_id}
             />
+            : 
+            <View>
+            <Text style={styles.cardTitle}>Friend Requests</Text>
+            <Card containerStyle={{padding: 5}}>
+            <Text style={styles.wallPost}>No friend requests.</Text>
+            </Card></View>}
             <FlatList
               data={this.state.friends}
-              ItemSeparatorComponent={this.myItemSeparator}
               ListHeaderComponent={() => (
-                <Text style={{fontSize: 30, textAlign: 'center', marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline'}}>
-                                    Friends
-                </Text>
+                <Text style={styles.cardTitle}>Friends</Text>
               )}
               renderItem={({item}) =>
-                <View>
-                  <Text style={{marginTop: 5, padding: 20}}>{item.user_givenname} {item.user_familyname}</Text>
+              <Card containerStyle={{padding: 5}}>
+                <Text style={styles.wallPost}>{item.user_givenname} {item.user_familyname}</Text>
+                <View style={styles.centralButton}>
                   <Button
                     title="View"
-                    style={{
-                      width: '300',
-                      alignItems: 'right',
-                    }}
                     onPress={() => this.goToProfile(item.user_id, item.user_givenname, item.user_familyname)}
+                    color="#7649fe"
                   />
-                </View>}
+                  </View>
+                </Card>}
               keyExtractor={(item) => item.user_id}
             />
           </ScrollView>
