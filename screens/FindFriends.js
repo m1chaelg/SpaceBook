@@ -5,6 +5,8 @@ import {
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Card } from 'react-native-elements';
+import styles from '../style/Styles';
 
 class FindFriendsScreen extends Component {
   constructor(props) {
@@ -115,6 +117,7 @@ class FindFriendsScreen extends Component {
     } else {
       return (
         <SafeAreaView style={{padding: 10}}>
+          <ScrollView>
           <SearchBar
             placeholder="Find friends..."
             onChangeText={this.updateSearch}
@@ -123,35 +126,26 @@ class FindFriendsScreen extends Component {
             autoFocus={true}
             onCancel={() => this.goBack()}
           />
-          <ScrollView>
             <FlatList
               data={this.state.results}
-              ItemSeparatorComponent={this.myItemSeparator}
               renderItem={({item}) =>
-                <View>
-                  <Text style={{marginTop: 5, padding: 20}}>
+              <Card containerStyle={{padding: 5}}>
+                  <Text style={styles.wallPost}>
                     {item.user_givenname} {item.user_familyname}</Text>
                   {this.isFriend(item.user_id) ?
                     <Button
                       title="View Profile"
-                      style={{
-                        width: '300',
-                        alignItems: 'right',
-                      }}
                       onPress={() => this.goToProfile(
                           item.user_id, item.user_givenname,
                           item.user_familyname)}
+                      color="#5643fd"
                     /> :
                     <Button
                       title="Send Friend Request"
-                      style={{
-                        width: '300',
-                        alignItems: 'right',
-                      }}
                       onPress={() => this.sendFriendReq(item.user_id)}
+                      color="#ba1e68"
                     />}
-                  <Text></Text>
-                </View>}
+                </Card>}
               keyExtractor={(item) => item.user_id}
             />
           </ScrollView>

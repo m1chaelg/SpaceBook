@@ -131,7 +131,9 @@ class DraftsScreen extends Component {
       return (
         <ScrollView style={{ flexGrow: 1 }}>
           <SafeAreaView style={{ padding: 10 }}>
+            <Card>
             <Text>{this.state.status}</Text>
+            </Card>
             <FlatList
               data={this.state.drafts}
               ListHeaderComponent={() => (

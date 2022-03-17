@@ -257,8 +257,6 @@ class PostsScreen extends Component {
               />
               </View>
             </View>
-              <Card.Divider style={styles.cardDivider} />
-              <Text>{this.state.status}</Text>
             </Card>
             <FlatList
               data={this.state.posts}
