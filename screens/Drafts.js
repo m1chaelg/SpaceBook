@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, Button, ActivityIndicator, SafeAreaView, ScrollView, FlatList, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card } from 'react-native-elements';
+import styles from '../style/Styles';
 
 class DraftsScreen extends Component {
   constructor(props) {
@@ -31,35 +32,36 @@ class DraftsScreen extends Component {
     return (
       <Card containerStyle={{ padding: 5 }}>
         <TextInput
-          style={{height: 40}}
+          style={styles.textInput}
           value={this.state.drafts[index]}
+          multiline
+          numberOfLines={4}
           onChangeText={(value) => this.editDraft(value, index)}
         />
-        <Card.Divider />
-        <Button
-          title="Save Edit"
-          style={{
-            width: '300',
-            alignItems: 'right',
-          }}
-          onPress={() => {this.saveDrafts();}}
-        />
+        <Card.Divider style={styles.cardDivider}/>
+        <View style={styles.horizontalContainer}>
+        <View style={styles.buttonContainer}>
         <Button
           title="Post draft"
-          style={{
-            width: '300',
-            alignItems: 'right',
-          }}
           onPress={() => {this.newPost(this.state.drafts[index]); this.forceUpdate()}}
+          color="#5643fd"
         />
+        </View>
+        <View style={styles.buttonContainer}>
+        <Button
+          title="Save Edit"
+          onPress={() => {this.saveDrafts();}}
+          color="#7649fe"
+        />
+        </View>
+        <View style={styles.buttonContainer}>
         <Button
           title="Delete draft"
-          style={{
-            width: '300',
-            alignItems: 'right',
-          }}
           onPress={() => this.deleteDraft(this.state.drafts[index]).then(() => this.saveDrafts())}
+          color="#ba1e68"
         />
+        </View>
+        </View>
       </Card>
     );
   };
@@ -133,9 +135,7 @@ class DraftsScreen extends Component {
             <FlatList
               data={this.state.drafts}
               ListHeaderComponent={() => (
-                <Text style={{ fontSize: 30, textAlign: 'center', marginTop: 20, fontWeight: 'bold', textDecorationLine: 'underline' }}>
-                  Drafts
-                </Text>
+                <Text style={styles.cardTitle}>Drafts</Text>
               )}
               renderItem={({item, index}) => this.postCard(item.item, index)}
               keyExtractor={(item, index) => index}

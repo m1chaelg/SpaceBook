@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
-import {Text, TextInput, View, Button} from 'react-native';
+import {Text, TextInput, SafeAreaView, Button, View} from 'react-native';
+import { Card } from 'react-native-elements';
+import styles from '../style/Styles';
 
 const RegisterScreen = ({navigation}) => {
   const [firstName, setFirst] = useState('');
@@ -40,7 +42,8 @@ const RegisterScreen = ({navigation}) => {
   };
 
   return (
-    <View style={{padding: 10}}>
+    <SafeAreaView style={styles.safeAreaView}>
+      <Card containerStyle={{padding: 5}}>
       <TextInput
         style={{height: 40}}
         placeholder="First name"
@@ -66,12 +69,17 @@ const RegisterScreen = ({navigation}) => {
         value={password}
         secureTextEntry='true'
       />
+      <Card.Divider style={styles.cardDivider} />
+      <View style={styles.centralButton}>
       <Button
         title={regBtn}
         onPress={() => register()}
+        color="#5643fd"
       />
+      </View>
       <Text>{status}</Text>
-    </View>
+      </Card>
+      </SafeAreaView>
   );
 };
 

@@ -224,7 +224,7 @@ class PostsScreen extends Component {
           <SafeAreaView style={styles.safeAreaView}>
             <Card containerStyle={{padding: 5}}>
               <Card.Title style={styles.wallPost}>Post something:</Card.Title>
-              <Card.Divider />
+              <Card.Divider style={styles.cardDivider}/>
               <TextInput
                 style={styles.textInput}
                 onChangeText={(newPost) => this.setState({newPost})}
