@@ -4,7 +4,7 @@ import {Text, TextInput, View, Button, ActivityIndicator,
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card} from 'react-native-elements';
 import moment from 'moment';
-import styles from '../style/Styles'
+import styles from '../style/Styles';
 
 class PostsScreen extends Component {
   constructor(props) {
@@ -42,9 +42,9 @@ class PostsScreen extends Component {
 
   async updateDrafts() {
     try {
-      this.setState({drafts: JSON.parse(await AsyncStorage.getItem('drafts'))})
-    } catch(err) {
-      this.setState({drafts: []})
+      this.setState({drafts: JSON.parse(await AsyncStorage.getItem('drafts'))});
+    } catch (err) {
+      this.setState({drafts: []});
     }
   }
 
@@ -123,31 +123,31 @@ class PostsScreen extends Component {
         <Text style={styles.wallPost}>{item.text}</Text>
         <Card.Divider style={styles.cardDivider} />
         <View style={styles.horizontalContainer}>
-        <View style={styles.textContainer2}>
-        <Text>{item.author.first_name} {item.author.last_name}</Text>
-        <Text>{dateTime}</Text>
-        </View>
-        <View style={styles.textContainer}>
-        <Text>{item.numLikes} Likes</Text>
-        </View>
+          <View style={styles.textContainer2}>
+            <Text>{item.author.first_name} {item.author.last_name}</Text>
+            <Text>{dateTime}</Text>
+          </View>
+          <View style={styles.textContainer}>
+            <Text>{item.numLikes} Likes</Text>
+          </View>
         </View>
         <Card.Divider style={styles.cardDivider} />
         {this.state.id == item.author.user_id ?
         <View style={styles.horizontalContainer}>
-        <View style={styles.buttonContainer}>
-        <Button
-        title="Edit post"
-        onPress={() => this.editPost(item)}
-        color="#7649fe"
-         />
-        </View>
-        <View style={styles.buttonContainer}>
-        <Button
-        title="Delete post"
-        onPress={() => this.deletePost(item.post_id)}
-        color="#ba1e68"
-         />
-        </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Edit post"
+              onPress={() => this.editPost(item)}
+              color="#7649fe"
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Delete post"
+              onPress={() => this.deletePost(item.post_id)}
+              color="#ba1e68"
+            />
+          </View>
         </View> : <Text></Text>}
       </Card>
     );
@@ -178,37 +178,37 @@ class PostsScreen extends Component {
   };
 
   savePost = async () => {
-    if(this.state.drafts === 0) {
-      var newArr = new Array()
-      newArr.push(this.state.newPost)
-      this.setState({drafts: newArr})
+    if (this.state.drafts === 0) {
+      const newArr = [];
+      newArr.push(this.state.newPost);
+      this.setState({drafts: newArr});
     } else {
       this.setState({
-        drafts: this.state.drafts.concat(this.state.newPost)
-      })
+        drafts: this.state.drafts.concat(this.state.newPost),
+      });
     }
-  }
+  };
 
   viewDrafts() {
     this.props.navigation.navigate('Drafts', {
-      drafts: this.state.drafts
+      drafts: this.state.drafts,
     });
   }
 
-  async saveDrafts () {
+  async saveDrafts() {
     try {
       await AsyncStorage.setItem('drafts', JSON.stringify(this.state.drafts))
-      .then(
-        () => AsyncStorage.getItem('drafts')
-              .then((result)=>console.log(result))
-     )
-    } catch(err) {
-      this.setState({status: err})
+          .then(
+              () => AsyncStorage.getItem('drafts')
+                  .then((result)=>console.log(result)),
+          );
+    } catch (err) {
+      this.setState({status: err});
     }
   }
 
   render() {
-    const draftBtn = "View Drafts ( " + this.state.drafts.length + " )"
+    const draftBtn = 'View Drafts ( ' + this.state.drafts.length + ' )';
     if (this.state.loading) {
       return (
         <View>
@@ -235,28 +235,29 @@ class PostsScreen extends Component {
               />
               <Card.Divider style={styles.cardDivider}/>
               <View style={styles.horizontalContainer}>
-              <View style={styles.buttonContainer}>
-              <Button
-                title="Submit post"
-                onPress={() => this.newPost()}
-                color="#5643fd"
-              />
+                <View style={styles.buttonContainer}>
+                  <Button
+                    title="Submit post"
+                    onPress={() => this.newPost()}
+                    color="#5643fd"
+                  />
+                </View>
+                <View style={styles.buttonContainer}>
+                  <Button
+                    title="Save as draft"
+                    onPress={() => this.savePost()
+                        .then(() => this.saveDrafts())}
+                    color="#7649fe"
+                  />
+                </View>
+                <View style={styles.buttonContainer}>
+                  <Button
+                    title={draftBtn}
+                    onPress={() => this.viewDrafts()}
+                    color="#7649fe"
+                  />
+                </View>
               </View>
-              <View style={styles.buttonContainer}>
-              <Button
-                title="Save as draft"
-                onPress={() => this.savePost().then(() => this.saveDrafts())}
-                color="#7649fe"
-              />
-              </View>
-              <View style={styles.buttonContainer}>
-              <Button
-                title={draftBtn} 
-                onPress={() => this.viewDrafts()}
-                color="#7649fe"
-              />
-              </View>
-            </View>
             </Card>
             <FlatList
               data={this.state.posts}

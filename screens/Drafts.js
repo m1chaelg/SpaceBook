@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { Text, View, Button, ActivityIndicator, SafeAreaView, ScrollView, FlatList, TextInput } from 'react-native';
+import React, {Component} from 'react';
+import {Text, View, Button, ActivityIndicator,
+  SafeAreaView, ScrollView, FlatList, TextInput} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Card } from 'react-native-elements';
+import {Card} from 'react-native-elements';
 import styles from '../style/Styles';
 
 class DraftsScreen extends Component {
@@ -12,8 +13,8 @@ class DraftsScreen extends Component {
       id: 0,
       loading: true,
       drafts: [],
-      status: "Save your edit before posting",
-      tempEdit: "",
+      status: 'Save your edit before posting',
+      tempEdit: '',
     };
   }
 
@@ -25,12 +26,12 @@ class DraftsScreen extends Component {
       drafts: this.props.route.params.drafts,
     });
 
-    this.setState({ loading: false });
+    this.setState({loading: false});
   }
 
   postCard = (draft, index) => {
     return (
-      <Card containerStyle={{ padding: 5 }}>
+      <Card containerStyle={{padding: 5}}>
         <TextInput
           style={styles.textInput}
           value={this.state.drafts[index]}
@@ -40,36 +41,41 @@ class DraftsScreen extends Component {
         />
         <Card.Divider style={styles.cardDivider}/>
         <View style={styles.horizontalContainer}>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Post draft"
-          onPress={() => {this.newPost(this.state.drafts[index]); this.forceUpdate()}}
-          color="#5643fd"
-        />
-        </View>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Save Edit"
-          onPress={() => {this.saveDrafts();}}
-          color="#7649fe"
-        />
-        </View>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Delete draft"
-          onPress={() => this.deleteDraft(this.state.drafts[index]).then(() => this.saveDrafts())}
-          color="#ba1e68"
-        />
-        </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Post draft"
+              onPress={() => {
+                this.newPost(this.state.drafts[index]); this.forceUpdate();
+              }}
+              color="#5643fd"
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Save Edit"
+              onPress={() => {
+                this.saveDrafts();
+              }}
+              color="#7649fe"
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Delete draft"
+              onPress={() => this.deleteDraft(this.state.drafts[index])
+                  .then(() => this.saveDrafts())}
+              color="#ba1e68"
+            />
+          </View>
         </View>
       </Card>
     );
   };
 
   editDraft(value, index) {
-    var newArr = this.state.drafts
-    newArr[index] = value
-    this.setState({drafts: newArr})
+    const newArr = this.state.drafts;
+    newArr[index] = value;
+    this.setState({drafts: newArr});
   }
 
   newPost = async (draft) => {
@@ -79,41 +85,41 @@ class DraftsScreen extends Component {
         'Content-Type': 'application/json',
         'X-authorization': this.state.token,
       },
-      body: JSON.stringify({ text: draft }),
+      body: JSON.stringify({text: draft}),
     })
-      .then((response) => {
-        if (response.status == 200) {
-          this.setState({ status: 'Posted.' });
-        }
-      })
-      .then(() => {
-        let arr = this.state.drafts;
-        arr = arr.filter(e => e !== draft);
-        this.setState({ drafts: arr });
-      })
-      .then(() => {
-        this.saveDrafts();
-      })
-      .catch((error) => {
-        this.setState({ status: error });
-      })
+        .then((response) => {
+          if (response.status == 200) {
+            this.setState({status: 'Posted.'});
+          }
+        })
+        .then(() => {
+          let arr = this.state.drafts;
+          arr = arr.filter((e) => e !== draft);
+          this.setState({drafts: arr});
+        })
+        .then(() => {
+          this.saveDrafts();
+        })
+        .catch((error) => {
+          this.setState({status: error});
+        });
   };
 
   deleteDraft = async (draft) => {
     let arr = this.state.drafts;
-    arr = arr.filter(e => e !== draft);
-    this.setState({ drafts: arr });
-  }
+    arr = arr.filter((e) => e !== draft);
+    this.setState({drafts: arr});
+  };
 
-  async saveDrafts () {
+  async saveDrafts() {
     try {
       await AsyncStorage.setItem('drafts', JSON.stringify(this.state.drafts))
-      .then(
-        () => AsyncStorage.getItem('drafts')
-              .then((result)=>console.log(result))
-     )
-    } catch(err) {
-      this.setState({status: err})
+          .then(
+              () => AsyncStorage.getItem('drafts')
+                  .then((result)=>console.log(result)),
+          );
+    } catch (err) {
+      this.setState({status: err});
     }
   }
 
@@ -129,10 +135,10 @@ class DraftsScreen extends Component {
       );
     } else {
       return (
-        <ScrollView style={{ flexGrow: 1 }}>
-          <SafeAreaView style={{ padding: 10 }}>
+        <ScrollView style={{flexGrow: 1}}>
+          <SafeAreaView style={{padding: 10}}>
             <Card>
-            <Text>{this.state.status}</Text>
+              <Text>{this.state.status}</Text>
             </Card>
             <FlatList
               data={this.state.drafts}

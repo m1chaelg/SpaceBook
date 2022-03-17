@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Button, View, TextInput, SafeAreaView, Text, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Card } from 'react-native-elements';
+import {Card} from 'react-native-elements';
 import styles from '../style/Styles';
 
 export default function LoginScreen({navigation}) {
@@ -44,57 +44,57 @@ export default function LoginScreen({navigation}) {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-        <Card containerStyle={{padding: 5}}>
+      <Card containerStyle={{padding: 5}}>
         <Image
           style={{width: 345, height: 345, margin: 5}}
           source={require('../assets/spacebook_logo.jpg')}
         />
         <Card.Divider style={styles.cardDivider} />
         <View style={styles.horizontalContainer}>
-        <View style={styles.textContainer}>
-        <Text>Email:</Text>
-        </View>
-        <View style={styles.textContainer2}>
-        <TextInput
-          style={{height: 40}}
-          placeholder="Email"
-          onChangeText={(value) => setEmail(value)}
-          value={email}
-        />
-        </View>
+          <View style={styles.textContainer}>
+            <Text>Email:</Text>
+          </View>
+          <View style={styles.textContainer2}>
+            <TextInput
+              style={{height: 40}}
+              placeholder="Email"
+              onChangeText={(value) => setEmail(value)}
+              value={email}
+            />
+          </View>
         </View>
         <View style={styles.horizontalContainer}>
-        <View style={styles.textContainer}>
-        <Text>Password:</Text>
-        </View>
-        <View style={styles.textContainer2}>
-        <TextInput
-          style={{height: 40}}
-          placeholder="Password"
-          onChangeText={(value) => setPassword(value)}
-          value={password}
-          secureTextEntry='true'
-        />
-        </View>
+          <View style={styles.textContainer}>
+            <Text>Password:</Text>
+          </View>
+          <View style={styles.textContainer2}>
+            <TextInput
+              style={{height: 40}}
+              placeholder="Password"
+              onChangeText={(value) => setPassword(value)}
+              value={password}
+              secureTextEntry='true'
+            />
+          </View>
         </View>
         <Card.Divider style={styles.cardDivider} />
         <View style={styles.horizontalContainer}>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Login"
-          onPress={() => handleLogin()}
-          color="#5643fd"
-        />
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Login"
+              onPress={() => handleLogin()}
+              color="#5643fd"
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Register"
+              onPress={() => navigation.navigate('Register')}
+              color="#7649fe"
+            />
+          </View>
         </View>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Register"
-          onPress={() => navigation.navigate('Register')}
-          color="#7649fe"
-        />
-        </View>
-        </View>
-        </Card>
-        </SafeAreaView>
+      </Card>
+    </SafeAreaView>
   );
 }

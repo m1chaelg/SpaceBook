@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Text, TextInput, View, Button, ActivityIndicator, SafeAreaView, ScrollView} from 'react-native';
+import {Text, TextInput, View, Button, ActivityIndicator,
+  SafeAreaView, ScrollView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card} from 'react-native-elements';
 import moment from 'moment';
@@ -103,6 +104,11 @@ class PostScreen extends Component {
         });
   };
 
+  nameString() {
+    return this.state.post.author.first_name + ' ' +
+    this.state.post.author.last_name;
+  }
+
   render() {
     if (this.state.loading) {
       return (
@@ -114,7 +120,8 @@ class PostScreen extends Component {
         </View>
       );
     } else {
-      const dateTime = moment(this.state.post.timestamp).format('MMMM Do YYYY, h:mm:ss a');
+      const dateTime = moment(this.state.post.timestamp)
+          .format('MMMM Do YYYY, h:mm:ss a');
       return (
         <ScrollView style={{flexGrow: 1}}>
           <SafeAreaView style={{padding: 10}}>
@@ -129,24 +136,26 @@ class PostScreen extends Component {
                   autoFocus={true}
                 /></Card.Title>
               <Card.Divider style={styles.cardDivider} />
-              <Text>{this.state.post.author.first_name} {this.state.post.author.last_name}</Text>
+              <Text>
+                {this.nameString()}
+              </Text>
               <Text>{dateTime}</Text>
               <Card.Divider style={styles.cardDivider} />
               <View style={styles.horizontalContainer}>
+                <View style={styles.buttonContainer}>
+                  <Button
+                    title="Update"
+                    onPress={() => this.updatePost(item)}
+                    color="#7649fe"
+                  />
+                </View>
+                {this.state.post.numLikes == 0 ?
               <View style={styles.buttonContainer}>
-              <Button
-                title="Update"
-                onPress={() => this.updatePost(item)}
-                color="#7649fe"
-              />
-              </View>
-              {this.state.post.numLikes == 0 ?
-              <View style={styles.buttonContainer}>
-              <Button
-                title="Delete post"
-                onPress={() => this.deletePost(item.post_id)}
-                color="#ba1e68"
-              />
+                <Button
+                  title="Delete post"
+                  onPress={() => this.deletePost(item.post_id)}
+                  color="#ba1e68"
+                />
               </View> : <Text></Text>}
               </View>
             </Card>

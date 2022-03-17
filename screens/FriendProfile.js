@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   Text, TextInput, View, Button, ActivityIndicator,
-  Image, FlatList, SafeAreaView, ScrollView, Dimensions
+  Image, FlatList, SafeAreaView, ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
-import { Card } from 'react-native-elements';
+import {Card} from 'react-native-elements';
 import styles from '../style/Styles';
 
 class FriendProfileScreen extends Component {
@@ -38,7 +38,7 @@ class FriendProfileScreen extends Component {
     this.getProfile();
     this.getProfilePic();
     this.getPosts();
-    this.setState({ loading: false });
+    this.setState({loading: false});
 
     this.focusListener = this.props.navigation.addListener('focus', () => {
       this.getProfile();
@@ -55,18 +55,18 @@ class FriendProfileScreen extends Component {
         'X-authorization': this.state.token,
       },
     })
-      .then((response) => response.json())
-      .then((response) => {
-        this.setState({
-          email: response.email,
-          firstName: response.first_name,
-          lastName: response.last_name,
-          friendCount: response.friend_count,
+        .then((response) => response.json())
+        .then((response) => {
+          this.setState({
+            email: response.email,
+            firstName: response.first_name,
+            lastName: response.last_name,
+            friendCount: response.friend_count,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   getProfilePic = () => {
@@ -76,16 +76,16 @@ class FriendProfileScreen extends Component {
         'X-Authorization': this.state.token,
       },
     })
-      .then((res) => {
-        return res.blob();
-      })
-      .then((resBlob) => {
-        const data = URL.createObjectURL(resBlob);
-        this.setState({ photo: data });
-      })
-      .catch((err) => {
-        console.log('error', err);
-      });
+        .then((res) => {
+          return res.blob();
+        })
+        .then((resBlob) => {
+          const data = URL.createObjectURL(resBlob);
+          this.setState({photo: data});
+        })
+        .catch((err) => {
+          console.log('error', err);
+        });
   };
 
   editPost(item) {
@@ -125,12 +125,12 @@ class FriendProfileScreen extends Component {
         'X-authorization': this.state.token,
       },
     })
-      .then(() => {
-        this.getPosts();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then(() => {
+          this.getPosts();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   };
 
   postCard = (item) => {
@@ -151,37 +151,36 @@ class FriendProfileScreen extends Component {
         <Card.Divider style={styles.cardDivider} />
         {this.state.id == item.author.user_id ?
         <View style={styles.horizontalContainer}>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Edit post"
-          onPress={() => this.editPost(item)}
-          color="#7649fe"
-        />
-        </View>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Delete post"
-          onPress={() => this.deletePost(item.post_id)}
-          color="#ba1e68"
-        />
-        </View>
-        </View>
-        :
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Edit post"
+              onPress={() => this.editPost(item)}
+              color="#7649fe"
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Delete post"
+              onPress={() => this.deletePost(item.post_id)}
+              color="#ba1e68"
+            />
+          </View>
+        </View> :
         <View style={styles.horizontalContainer}>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Like"
-          onPress={() => this.likeOrUnlikePost(item, 'POST')}
-          color="#5643fd"
-        />
-        </View>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Unlike"
-          onPress={() => this.likeOrUnlikePost(item, 'DELETE')}
-          color="#7649fe"
-        />
-        </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Like"
+              onPress={() => this.likeOrUnlikePost(item, 'POST')}
+              color="#5643fd"
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Unlike"
+              onPress={() => this.likeOrUnlikePost(item, 'DELETE')}
+              color="#7649fe"
+            />
+          </View>
         </View>}
       </Card>
     );
@@ -195,15 +194,15 @@ class FriendProfileScreen extends Component {
         'X-authorization': this.state.token,
       },
     })
-      .then((response) => response.json())
-      .then((response) => {
-        this.setState({
-          posts: response,
+        .then((response) => response.json())
+        .then((response) => {
+          this.setState({
+            posts: response,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   newPost = async () => {
@@ -213,27 +212,27 @@ class FriendProfileScreen extends Component {
         'Content-Type': 'application/json',
         'X-authorization': this.state.token,
       },
-      body: JSON.stringify({ text: this.state.newPost }),
+      body: JSON.stringify({text: this.state.newPost}),
     })
-      .then((response) => {
-        if (response.status == 200) {
-          this.setState({ status: 'Posted.' });
-        }
-      })
-      .catch((error) => {
-        this.setState({ status: error });
-        console.log(error);
-      })
-      .finally(() => {
-        this.setState({ newPost: '' });
-        this.getPosts();
-      });
+        .then((response) => {
+          if (response.status == 200) {
+            this.setState({status: 'Posted.'});
+          }
+        })
+        .catch((error) => {
+          this.setState({status: error});
+          console.log(error);
+        })
+        .finally(() => {
+          this.setState({newPost: ''});
+          this.getPosts();
+        });
   };
 
   myItemSeparator = () => {
     return <View style={{
       height: 1, backgroundColor: 'grey',
-      marginHorizontal: 10, marginTop: 5
+      marginHorizontal: 10, marginTop: 5,
     }} />;
   };
 
@@ -251,13 +250,13 @@ class FriendProfileScreen extends Component {
       return (
         <SafeAreaView style={styles.safeAreaView}>
           <ScrollView>
-            <Card containerStyle={{ padding: 5 }}>
+            <Card containerStyle={{padding: 5}}>
               <Image
                 source={{
                   uri: this.state.photo,
                 }}
                 style={{
-                  width: "100%",
+                  width: '100%',
                   height: 300,
                 }}
               />
@@ -265,12 +264,12 @@ class FriendProfileScreen extends Component {
               <Text>Email: {this.state.email}</Text>
               <Text>Friends: {this.state.friendCount}</Text>
             </Card>
-            <Card containerStyle={{ padding: 5 }}>
+            <Card containerStyle={{padding: 5}}>
               <Card.Title style={styles.wallPost}>Post something:</Card.Title>
               <Card.Divider style={styles.cardDivider} />
               <TextInput
                 style={styles.textInput}
-                onChangeText={(newPost) => this.setState({ newPost })}
+                onChangeText={(newPost) => this.setState({newPost})}
                 multiline
                 numberOfLines={4}
                 value={this.state.newPost}

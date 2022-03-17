@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import {
-  Text, View, Button, ActivityIndicator,
-  FlatList, SafeAreaView, ScrollView, Alert,
-} from 'react-native';
+import {Text, View, Button, ActivityIndicator,
+  FlatList, SafeAreaView, ScrollView} from 'react-native';
 import {SearchBar} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Card } from 'react-native-elements';
+import {Card} from 'react-native-elements';
 import styles from '../style/Styles';
 
 class FindFriendsScreen extends Component {
@@ -59,7 +57,6 @@ class FindFriendsScreen extends Component {
           });
         })
         .catch((error) => {
-          this.sendAlert();
           console.log(error);
         });
   };
@@ -78,12 +75,6 @@ class FindFriendsScreen extends Component {
         .catch((error) => {
           console.log(error);
         });
-  };
-
-  sendAlert = () => {
-    Alert.alert(
-        'Already requested.',
-        'You have already sent a friend request to this person.');
   };
 
   goToProfile(id, first, last) {
@@ -118,18 +109,18 @@ class FindFriendsScreen extends Component {
       return (
         <SafeAreaView style={{padding: 10}}>
           <ScrollView>
-          <SearchBar
-            placeholder="Find friends..."
-            onChangeText={this.updateSearch}
-            value={this.state.search}
-            platform="android"
-            autoFocus={true}
-            onCancel={() => this.goBack()}
-          />
+            <SearchBar
+              placeholder="Find friends..."
+              onChangeText={this.updateSearch}
+              value={this.state.search}
+              platform="android"
+              autoFocus={true}
+              onCancel={() => this.goBack()}
+            />
             <FlatList
               data={this.state.results}
               renderItem={({item}) =>
-              <Card containerStyle={{padding: 5}}>
+                <Card containerStyle={{padding: 5}}>
                   <Text style={styles.wallPost}>
                     {item.user_givenname} {item.user_familyname}</Text>
                   {this.isFriend(item.user_id) ?

@@ -4,7 +4,7 @@ import {Text, View, Button, ActivityIndicator, FlatList,
 import {Card} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SearchBar} from 'react-native-elements';
-import styles from '../style/Styles'
+import styles from '../style/Styles';
 
 class FriendScreen extends Component {
   constructor(props) {
@@ -129,7 +129,7 @@ class FriendScreen extends Component {
             onClick={() => this.searchFriends()}
           />
           <ScrollView>
-          {this.state.friendrequests.length !== 0 ?
+            {this.state.friendrequests.length !== 0 ?
             <FlatList
               data={this.state.friendrequests}
               ItemSeparatorComponent={this.myItemSeparator}
@@ -138,46 +138,51 @@ class FriendScreen extends Component {
               )}
               renderItem={({item}) =>
                 <Card containerStyle={{padding: 5}}>
-                  <Text style={styles.wallPost}>{item.first_name} {item.last_name}</Text>
+                  <Text style={styles.wallPost}>
+                    {item.first_name} {item.last_name}
+                  </Text>
                   <View style={styles.horizontalContainer}>
-                  <View style={styles.buttonContainer}>
-                  <Button
-                    title="Accept"
-                    onPress={() => this.friendRequest(item.user_id, 'POST')}
-                    color="#5643fd"
-                  />
-                  </View>
-                  <View style={styles.buttonContainer}>
-                  <Button
-                    title="Reject"
-                    onPress={() => this.friendRequest(item.user_id, 'DELETE')}
-                    color="#ba1e68"
-                  />
-                  </View>
+                    <View style={styles.buttonContainer}>
+                      <Button
+                        title="Accept"
+                        onPress={() => this.friendRequest(item.user_id, 'POST')}
+                        color="#5643fd"
+                      />
+                    </View>
+                    <View style={styles.buttonContainer}>
+                      <Button
+                        title="Reject"
+                        onPress={() =>
+                          this.friendRequest(item.user_id, 'DELETE')}
+                        color="#ba1e68"
+                      />
+                    </View>
                   </View>
                 </Card>}
               keyExtractor={(item) => item.user_id}
-            />
-            : 
+            /> :
             <View>
-            <Text style={styles.cardTitle}>Friend Requests</Text>
-            <Card containerStyle={{padding: 5}}>
-            <Text style={styles.wallPost}>No friend requests.</Text>
-            </Card></View>}
+              <Text style={styles.cardTitle}>Friend Requests</Text>
+              <Card containerStyle={{padding: 5}}>
+                <Text style={styles.wallPost}>No friend requests.</Text>
+              </Card></View>}
             <FlatList
               data={this.state.friends}
               ListHeaderComponent={() => (
                 <Text style={styles.cardTitle}>Friends</Text>
               )}
               renderItem={({item}) =>
-              <Card containerStyle={{padding: 5}}>
-                <Text style={styles.wallPost}>{item.user_givenname} {item.user_familyname}</Text>
-                <View style={styles.centralButton}>
-                  <Button
-                    title="View"
-                    onPress={() => this.goToProfile(item.user_id, item.user_givenname, item.user_familyname)}
-                    color="#7649fe"
-                  />
+                <Card containerStyle={{padding: 5}}>
+                  <Text style={styles.wallPost}>
+                    {item.user_givenname} {item.user_familyname}
+                  </Text>
+                  <View style={styles.centralButton}>
+                    <Button
+                      title="View"
+                      onPress={() => this.goToProfile(item.user_id,
+                          item.user_givenname, item.user_familyname)}
+                      color="#7649fe"
+                    />
                   </View>
                 </Card>}
               keyExtractor={(item) => item.user_id}

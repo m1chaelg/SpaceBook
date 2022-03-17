@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Text, TextInput, SafeAreaView, Button, View} from 'react-native';
-import { Card } from 'react-native-elements';
+import {Card} from 'react-native-elements';
 import styles from '../style/Styles';
 
 const RegisterScreen = ({navigation}) => {
@@ -44,42 +44,42 @@ const RegisterScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <Card containerStyle={{padding: 5}}>
-      <TextInput
-        style={{height: 40}}
-        placeholder="First name"
-        onChangeText={ (value) => setFirst(value)}
-        value={firstName}
-      />
-      <TextInput
-        style={{height: 40}}
-        placeholder="Last name"
-        onChangeText={ (value) => setLast(value)}
-        value={lastName}
-      />
-      <TextInput
-        style={{height: 40}}
-        placeholder="Email"
-        onChangeText={ (value) => setEmail(value)}
-        value={email}
-      />
-      <TextInput
-        style={{height: 40}}
-        placeholder="Password"
-        onChangeText={ (value) => setPassword(value)}
-        value={password}
-        secureTextEntry='true'
-      />
-      <Card.Divider style={styles.cardDivider} />
-      <View style={styles.centralButton}>
-      <Button
-        title={regBtn}
-        onPress={() => register()}
-        color="#5643fd"
-      />
-      </View>
-      <Text>{status}</Text>
+        <TextInput
+          style={{height: 40}}
+          placeholder="First name"
+          onChangeText={ (value) => setFirst(value)}
+          value={firstName}
+        />
+        <TextInput
+          style={{height: 40}}
+          placeholder="Last name"
+          onChangeText={ (value) => setLast(value)}
+          value={lastName}
+        />
+        <TextInput
+          style={{height: 40}}
+          placeholder="Email"
+          onChangeText={ (value) => setEmail(value)}
+          value={email}
+        />
+        <TextInput
+          style={{height: 40}}
+          placeholder="Password"
+          onChangeText={ (value) => setPassword(value)}
+          value={password}
+          secureTextEntry='true'
+        />
+        <Card.Divider style={styles.cardDivider} />
+        <View style={styles.centralButton}>
+          <Button
+            title={regBtn}
+            onPress={() => register()}
+            color="#5643fd"
+          />
+        </View>
+        <Text>{status}</Text>
       </Card>
-      </SafeAreaView>
+    </SafeAreaView>
   );
 };
 

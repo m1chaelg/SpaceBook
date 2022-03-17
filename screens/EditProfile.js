@@ -4,7 +4,7 @@ import {Text, TextInput, View, SafeAreaView,
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Dimensions} from 'react-native';
 import styles from '../style/Styles';
-import { Card } from 'react-native-elements';
+import {Card} from 'react-native-elements';
 
 const EditProfileScreen = ({navigation}) => {
   const [loading, setLoading] = useState(true);
@@ -109,86 +109,86 @@ const EditProfileScreen = ({navigation}) => {
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <Card containerStyle={{padding: 5}}>
-        <Image
-          source={{uri: photo}}
-          style={{
-            width: (Dimensions.get('window').width) - 40,
-            height: (Dimensions.get('window').width) - 40,
-          }}
-        />
-        <Card.Divider style={styles.cardDivider} />
-        <View style={styles.centralButton}>
-          <Button
-            title="Update profile picture"
-            onPress={() => takePhoto()}
-            color="#7649fe"
+          <Image
+            source={{uri: photo}}
+            style={{
+              width: (Dimensions.get('window').width) - 40,
+              height: (Dimensions.get('window').width) - 40,
+            }}
           />
-        </View>
-        <View style={styles.horizontalContainer}>
-        <View style={styles.textContainer}>
-        <Text>First name:</Text>
-        </View>
-        <View style={styles.textContainer2}>
-        <TextInput
-          style={{height: 40}}
-          placeholder={firstName}
-          onChangeText={(value) => setFirstName(value)}
-          value={firstName}
-        />
-        </View>
-        </View>
-        <Card.Divider style={styles.cardDivider} />
-        <View style={styles.horizontalContainer}>
-        <View style={styles.textContainer}>
-        <Text>Last name:</Text>
-        </View>
-        <View style={styles.textContainer2}>
-        <TextInput
-          style={{height: 40}}
-          placeholder={lastName}
-          onChangeText={(value) => setLastName(value)}
-          value={lastName}
-        />
-        </View>
-        </View>
-        <Card.Divider style={styles.cardDivider} />
-        <View style={styles.horizontalContainer}>
-        <View style={styles.textContainer}>
-        <Text>Email:</Text>
-        </View>
-        <View style={styles.textContainer2}>
-        <TextInput
-          style={{height: 40}}
-          placeholder={email}
-          onChangeText={(value) => setEmail(value)}
-          value={email}
-        />
-        </View>
-        </View>
-        <Card.Divider style={styles.cardDivider} />
-        <View style={styles.horizontalContainer}>
-        <View style={styles.textContainer}>
-        <Text>Password</Text>
-        </View>
-        <View style={styles.textContainer2}>
-        <TextInput
-          style={{height: 40}}
-          placeholder="Password"
-          onChangeText={(value) => setPassword(value)}
-          value={password}
-          secureTextEntry='true'
-        />
-        </View>
-        </View>
-        <Card.Divider style={styles.cardDivider} />
-        <View style={styles.centralButton}>
-        <Button
-          title="Save"
-          onPress={() => saveProfile()}
-          color="#5643fd"
-        />
-        </View>
-      </Card>
+          <Card.Divider style={styles.cardDivider} />
+          <View style={styles.centralButton}>
+            <Button
+              title="Update profile picture"
+              onPress={() => takePhoto()}
+              color="#7649fe"
+            />
+          </View>
+          <View style={styles.horizontalContainer}>
+            <View style={styles.textContainer}>
+              <Text>First name:</Text>
+            </View>
+            <View style={styles.textContainer2}>
+              <TextInput
+                style={{height: 40}}
+                placeholder={firstName}
+                onChangeText={(value) => setFirstName(value)}
+                value={firstName}
+              />
+            </View>
+          </View>
+          <Card.Divider style={styles.cardDivider} />
+          <View style={styles.horizontalContainer}>
+            <View style={styles.textContainer}>
+              <Text>Last name:</Text>
+            </View>
+            <View style={styles.textContainer2}>
+              <TextInput
+                style={{height: 40}}
+                placeholder={lastName}
+                onChangeText={(value) => setLastName(value)}
+                value={lastName}
+              />
+            </View>
+          </View>
+          <Card.Divider style={styles.cardDivider} />
+          <View style={styles.horizontalContainer}>
+            <View style={styles.textContainer}>
+              <Text>Email:</Text>
+            </View>
+            <View style={styles.textContainer2}>
+              <TextInput
+                style={{height: 40}}
+                placeholder={email}
+                onChangeText={(value) => setEmail(value)}
+                value={email}
+              />
+            </View>
+          </View>
+          <Card.Divider style={styles.cardDivider} />
+          <View style={styles.horizontalContainer}>
+            <View style={styles.textContainer}>
+              <Text>Password</Text>
+            </View>
+            <View style={styles.textContainer2}>
+              <TextInput
+                style={{height: 40}}
+                placeholder="Password"
+                onChangeText={(value) => setPassword(value)}
+                value={password}
+                secureTextEntry='true'
+              />
+            </View>
+          </View>
+          <Card.Divider style={styles.cardDivider} />
+          <View style={styles.centralButton}>
+            <Button
+              title="Save"
+              onPress={() => saveProfile()}
+              color="#5643fd"
+            />
+          </View>
+        </Card>
       </SafeAreaView>
     );
   }

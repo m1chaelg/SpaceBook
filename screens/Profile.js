@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import {Text, View, Button,
   ActivityIndicator, Image, SafeAreaView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Dimensions} from 'react-native';
 import styles from '../style/Styles';
-import { Card } from 'react-native-elements';
+import {Card} from 'react-native-elements';
 
 class ProfileScreen extends Component {
   constructor(props) {
@@ -118,35 +117,35 @@ class ProfileScreen extends Component {
     } else {
       return (
         <SafeAreaView style={styles.safeAreaView}>
-        <Card containerStyle={{padding: 5}}>
-          <Image
-            source={{
-              uri: this.state.photo,
-            }}
-            style={{
-              width: "100%",
-              height: 300,
-            }}
-          />
-          <Card.Divider style={styles.cardDivider} />
-          <Text>{this.state.firstName} {this.state.lastName}</Text>
-          <Text>Email: {this.state.email}</Text>
-          <Text>Friends: {this.state.friendCount}</Text>
-          <Card.Divider style={styles.cardDivider} />
-          <View style={styles.centralButton}>
-          <Button
-            title="Edit Profile"
-            onPress={() => this.editProfile()}
-            color="#7649fe"
-          />
-          </View>
-          <View style={styles.centralButton}>
-          <Button
-            title="Logout"
-            onPress={() => this.handleLogout()}
-            color="#ba1e68"
-          />
-          </View>
+          <Card containerStyle={{padding: 5}}>
+            <Image
+              source={{
+                uri: this.state.photo,
+              }}
+              style={{
+                width: '100%',
+                height: 300,
+              }}
+            />
+            <Card.Divider style={styles.cardDivider} />
+            <Text>{this.state.firstName} {this.state.lastName}</Text>
+            <Text>Email: {this.state.email}</Text>
+            <Text>Friends: {this.state.friendCount}</Text>
+            <Card.Divider style={styles.cardDivider} />
+            <View style={styles.centralButton}>
+              <Button
+                title="Edit Profile"
+                onPress={() => this.editProfile()}
+                color="#7649fe"
+              />
+            </View>
+            <View style={styles.centralButton}>
+              <Button
+                title="Logout"
+                onPress={() => this.handleLogout()}
+                color="#ba1e68"
+              />
+            </View>
           </Card>
         </SafeAreaView>
       );
