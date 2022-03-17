@@ -86,6 +86,9 @@ class FriendScreen extends Component {
           console.log('Friend request ' + response);
           this.getFriendRequests();
         })
+        .then(() => {
+          this.getFriends();
+        })
         .catch((error) => {
           console.log(error);
         });
@@ -132,7 +135,6 @@ class FriendScreen extends Component {
             {this.state.friendrequests.length !== 0 ?
             <FlatList
               data={this.state.friendrequests}
-              ItemSeparatorComponent={this.myItemSeparator}
               ListHeaderComponent={() => (
                 <Text style={styles.cardTitle}>Friend Requests</Text>
               )}

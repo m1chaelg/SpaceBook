@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {Component} from 'react';
 import {Text, TextInput, View, SafeAreaView,
   Button, ActivityIndicator, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,86 +6,77 @@ import {Dimensions} from 'react-native';
 import styles from '../style/Styles';
 import {Card} from 'react-native-elements';
 
-const EditProfileScreen = ({navigation}) => {
-  const [loading, setLoading] = useState(true);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [token, setToken] = useState('');
-  const [id, setId] = useState(null);
-  const [photo, setPhoto] = useState();
-  const [password, setPassword] = useState('');
+class EditProfileScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      token: '',
+      id: 0,
+      firstName: '',
+      lastName: '',
+      email: '',
+      friendCount: '',
+      loading: true,
+    };
+  }
 
-  useEffect(async () => {
-    setToken(await AsyncStorage.getItem('token'));
-    setId(await AsyncStorage.getItem('id'));
+  async componentDidMount() {
+    this.setState({
+      token: await AsyncStorage.getItem('token'),
+      id: await AsyncStorage.getItem('id'),
+      loading: true,
+    });
+    this.getProfile();
+    this.setState({loading: false});
 
-    if (loading) {
-      getProfile();
-      getProfilePic();
-      setLoading(false);
-    }
-  });
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.getProfile();
+    });
+  }
 
-  const getProfile = async () => {
-    return fetch('http://localhost:3333/api/1.0.0/user/' + id, {
+
+  getProfile = async () => {
+    return fetch('http://localhost:3333/api/1.0.0/user/' + this.state.id, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'X-authorization': token,
+        'X-authorization': this.state.token,
       },
     })
         .then((response) => response.json())
         .then((response) => {
-          setEmail(response.email);
-          setFirstName(response.first_name);
-          setLastName(response.last_name);
+          this.setState({
+            email: response.email,
+            firstName: response.first_name,
+            lastName: response.last_name,
+          });
         })
         .catch((error) => {
           console.log(error);
         });
   };
 
-  const getProfilePic = () => {
-    fetch('http://localhost:3333/api/1.0.0/user/' + id + '/photo', {
-      method: 'GET',
-      headers: {
-        'X-Authorization': token,
-      },
-    })
-        .then((res) => {
-          return res.blob();
-        })
-        .then((resBlob) => {
-          const data = URL.createObjectURL(resBlob);
-          setPhoto(data);
-        })
-        .catch((err) => {
-          console.log('error', err);
-        });
+  takePhoto = async () => {
+    this.props.navigation.navigate('Camera');
   };
 
-  const takePhoto = async () => {
-    navigation.navigate('Camera');
-  };
-
-  const saveProfile = () => {
-    return fetch('http://localhost:3333/api/1.0.0/user/' + id, {
+  saveProfile = () => {
+    return fetch('http://localhost:3333/api/1.0.0/user/' + this.state.id, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        'X-authorization': token,
+        'X-authorization': this.state.token,
       },
       body: JSON.stringify({
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        password: password}),
+        first_name: this.state.firstName,
+        last_name: this.state.lastName,
+        email: this.state.email,
+        password: this.state.password}),
     })
         .then((response) => {
           if (response.status == 200) {
             console.log(response);
-            navigation.goBack(null);
+            this.props.navigation.goBack(null);
           } else {
             console.log(response);
           }
@@ -96,7 +87,8 @@ const EditProfileScreen = ({navigation}) => {
         });
   };
 
-  if (loading) {
+  render() {
+  if (this.state.loading) {
     return (
       <View>
         <ActivityIndicator
@@ -104,23 +96,15 @@ const EditProfileScreen = ({navigation}) => {
           color="#00ff00"
         />
       </View>
-    );
+    )
   } else {
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <Card containerStyle={{padding: 5}}>
-          <Image
-            source={{uri: photo}}
-            style={{
-              width: (Dimensions.get('window').width) - 40,
-              height: (Dimensions.get('window').width) - 40,
-            }}
-          />
-          <Card.Divider style={styles.cardDivider} />
           <View style={styles.centralButton}>
             <Button
               title="Update profile picture"
-              onPress={() => takePhoto()}
+              onPress={() => this.takePhoto()}
               color="#7649fe"
             />
           </View>
@@ -131,9 +115,9 @@ const EditProfileScreen = ({navigation}) => {
             <View style={styles.textContainer2}>
               <TextInput
                 style={{height: 40}}
-                placeholder={firstName}
-                onChangeText={(value) => setFirstName(value)}
-                value={firstName}
+                placeholder={this.state.firstName}
+                onChangeText={(firstName) => this.setState({firstName})}
+                value={this.state.firstName}
               />
             </View>
           </View>
@@ -145,9 +129,9 @@ const EditProfileScreen = ({navigation}) => {
             <View style={styles.textContainer2}>
               <TextInput
                 style={{height: 40}}
-                placeholder={lastName}
-                onChangeText={(value) => setLastName(value)}
-                value={lastName}
+                placeholder={this.state.lastName}
+                onChangeText={(lastName) => this.setState({lastName})}
+                value={this.state.lastName}
               />
             </View>
           </View>
@@ -159,9 +143,9 @@ const EditProfileScreen = ({navigation}) => {
             <View style={styles.textContainer2}>
               <TextInput
                 style={{height: 40}}
-                placeholder={email}
-                onChangeText={(value) => setEmail(value)}
-                value={email}
+                placeholder={this.state.email}
+                onChangeText={(email) => this.setState({email})}
+                value={this.state.email}
               />
             </View>
           </View>
@@ -174,8 +158,8 @@ const EditProfileScreen = ({navigation}) => {
               <TextInput
                 style={{height: 40}}
                 placeholder="Password"
-                onChangeText={(value) => setPassword(value)}
-                value={password}
+                onChangeText={(password) => this.setState({password})}
+                value={this.state.password}
                 secureTextEntry='true'
               />
             </View>
@@ -184,7 +168,7 @@ const EditProfileScreen = ({navigation}) => {
           <View style={styles.centralButton}>
             <Button
               title="Save"
-              onPress={() => saveProfile()}
+              onPress={() => this.saveProfile()}
               color="#5643fd"
             />
           </View>
@@ -192,6 +176,7 @@ const EditProfileScreen = ({navigation}) => {
       </SafeAreaView>
     );
   }
+}
 };
 
 export default EditProfileScreen;

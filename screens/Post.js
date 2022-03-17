@@ -145,7 +145,7 @@ class PostScreen extends Component {
                 <View style={styles.buttonContainer}>
                   <Button
                     title="Update"
-                    onPress={() => this.updatePost(item)}
+                    onPress={() => this.updatePost()}
                     color="#7649fe"
                   />
                 </View>
@@ -153,7 +153,7 @@ class PostScreen extends Component {
               <View style={styles.buttonContainer}>
                 <Button
                   title="Delete post"
-                  onPress={() => this.deletePost(item.post_id)}
+                  onPress={() => this.deletePost()}
                   color="#ba1e68"
                 />
               </View> : <Text></Text>}

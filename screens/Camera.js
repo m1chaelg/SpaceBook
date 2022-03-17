@@ -70,7 +70,8 @@ class CameraScreen extends Component {
 
           <Button
             title="Take Photo" onPress={() => {
-              this.takePicture();
+              this.takePicture()
+              .then(() => this.props.navigation.goBack(null))
             }}
             color="#5643fd"
           />
